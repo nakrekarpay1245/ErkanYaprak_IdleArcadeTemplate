@@ -1,4 +1,5 @@
 using UnityEngine;
+using _Game.Scripts.TopDownCharacter;
 
 namespace _Game.Scripts.TopDownCamera
 {
