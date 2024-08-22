@@ -32,8 +32,10 @@ namespace _Game.Scripts.TopDownCharacter
         public override void TakeDamage(float amount)
         {
             base.TakeDamage(amount);
-            _characterAnimator.PlayHurtAnimation();
-
+            if (!_isDie)
+            {
+                _characterAnimator.PlayHurtAnimation();
+            }
             // Pause movement briefly upon taking damage
             _characterController.PauseMovement(_stopDuration);
         }

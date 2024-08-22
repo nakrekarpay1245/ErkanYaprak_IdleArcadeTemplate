@@ -63,7 +63,7 @@ namespace _Game.Scripts.TopDownCharacter
 
         public void PlayDeadAnimation()
         {
-            _animator.SetBool(_isDeadHashCode, true);
+            _animator.SetTrigger(_isDeadHashCode);
         }
 
         public void PlayAttackAnimation()
