@@ -2,7 +2,7 @@ using _Game.Scripts._Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace _Game.Scripts._Abstracts
+namespace _Game.Scripts._Base
 {
     /// <summary>
     /// Base class for interactable objects with progress bar and SphereCollider functionality.
@@ -18,9 +18,12 @@ namespace _Game.Scripts._Abstracts
         [SerializeField]
         private UnityEvent onInteractionComplete;
 
-        [HideInInspector]
-        public SphereCollider sphereCollider;
+        [Header("Sphere Collider Settings")]
+        [Tooltip("The initial radius of the SphereCollider.")]
+        [SerializeField]
+        private float initialColliderRadius = 1f;
 
+        private SphereCollider sphereCollider;
         private float interactionTimeRemaining;
         private bool isInteracting;
 
@@ -30,8 +33,8 @@ namespace _Game.Scripts._Abstracts
             sphereCollider = GetComponent<SphereCollider>();
             if (sphereCollider != null)
             {
-                // Update the radius or any other property as needed
-                sphereCollider.radius = CalculateInitialRadius();
+                // Set the initial radius of the SphereCollider
+                sphereCollider.radius = initialColliderRadius;
             }
             else
             {
@@ -43,7 +46,7 @@ namespace _Game.Scripts._Abstracts
         {
             if (isInteracting)
             {
-                // Update the interaction progress bar
+                // Update the interaction progress
                 interactionTimeRemaining -= Time.deltaTime;
                 if (interactionTimeRemaining <= 0)
                 {
@@ -77,12 +80,6 @@ namespace _Game.Scripts._Abstracts
                 // Deactivate this object
                 gameObject.SetActive(false);
             }
-        }
-
-        private float CalculateInitialRadius()
-        {
-            // Implement radius calculation logic here
-            return 1f; // Example value
         }
 
 #if UNITY_EDITOR
