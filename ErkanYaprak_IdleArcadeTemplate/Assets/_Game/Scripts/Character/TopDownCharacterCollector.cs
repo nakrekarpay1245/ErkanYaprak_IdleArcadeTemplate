@@ -1,3 +1,4 @@
+using _Game.Scripts._Interfaces;
 using _Game.Scripts.Collectable;
 using UnityEngine;
 using UnityEngine.Events;

@@ -1,8 +1,9 @@
+using _Game.Scripts._Interfaces;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace _Game.Scripts.Collectable
+namespace _Game.Scripts._Abstracts
 {
     /// <summary>
     /// Abstract base class for all collectible items in the game.

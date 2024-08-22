@@ -32,6 +32,7 @@ namespace _Game.Scripts.TopDownCharacter
         private Vector3 _velocity;
         private Vector3 _currentVelocity;
         private bool _isMovementPaused = false; // Track if movement is paused
+        private bool _isCoroutineRunning = false; // Track if coroutine is running
         private float _savedMovementSpeed; // Store the original speed
 
         [Header("Publics")]
@@ -108,7 +109,7 @@ namespace _Game.Scripts.TopDownCharacter
         /// <param name="duration">The time in seconds to pause movement.</param>
         public void PauseMovement(float duration)
         {
-            if (!_isMovementPaused)
+            if (!_isCoroutineRunning)
             {
                 StartCoroutine(PauseMovementCoroutine(duration));
             }
@@ -121,6 +122,7 @@ namespace _Game.Scripts.TopDownCharacter
         /// <returns></returns>
         private IEnumerator PauseMovementCoroutine(float duration)
         {
+            _isCoroutineRunning = true;
             _isMovementPaused = true;
             _savedMovementSpeed = _movementSpeed; // Store the original speed
             _movementSpeed = 0f; // Set movement speed to 0
@@ -129,6 +131,7 @@ namespace _Game.Scripts.TopDownCharacter
 
             _movementSpeed = _savedMovementSpeed; // Restore the original speed
             _isMovementPaused = false;
+            _isCoroutineRunning = false;
         }
     }
 }

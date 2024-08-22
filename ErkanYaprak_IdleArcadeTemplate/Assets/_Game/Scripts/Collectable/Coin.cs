@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using _Game.Scripts._Abstracts;
 
 namespace _Game.Scripts.Collectable
 {

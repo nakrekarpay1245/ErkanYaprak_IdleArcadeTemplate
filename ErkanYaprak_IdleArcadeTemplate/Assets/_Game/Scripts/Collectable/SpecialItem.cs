@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
+using _Game.Scripts._Interfaces;
+using _Game.Scripts._Abstracts;
 
 namespace _Game.Scripts.Collectable
 {
