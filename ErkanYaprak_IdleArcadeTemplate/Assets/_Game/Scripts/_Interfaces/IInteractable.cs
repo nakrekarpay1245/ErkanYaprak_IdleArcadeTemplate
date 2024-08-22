@@ -14,5 +14,10 @@ namespace _Game.Scripts._Interfaces
         /// Completes interaction with the object.
         /// </summary>
         void CompleteInteraction();
+
+        /// <summary>
+        /// Cancels interaction with the object.
+        /// </summary>
+        void CancelInteraction();
     }
 }
