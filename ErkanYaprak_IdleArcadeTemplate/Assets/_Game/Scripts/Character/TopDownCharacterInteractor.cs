@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Linq;
 using _Game.Scripts._Interfaces;
 
-namespace _Game.Scripts
+namespace _Game.Scripts.TopDownCharacter
 {
     /// <summary>
     /// Handles interaction with the nearest IInteractable objects within a specified radius.

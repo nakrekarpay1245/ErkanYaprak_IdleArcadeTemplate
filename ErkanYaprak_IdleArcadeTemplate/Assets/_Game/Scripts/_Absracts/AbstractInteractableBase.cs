@@ -1,40 +1,46 @@
 using _Game.Scripts._Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
 
-namespace _Game.Scripts._Base
+namespace _Game.Scripts._Abstracts
 {
     /// <summary>
     /// Base class for interactable objects with progress bar and SphereCollider functionality.
     /// </summary>
+    [RequireComponent(typeof(SphereCollider))]
     public abstract class AbstractInteractableBase : MonoBehaviour, IInteractable
     {
         [Header("Interaction Settings")]
         [Tooltip("The duration for the interaction.")]
         [SerializeField, Range(1f, 10f)]
-        private float interactionDuration = 5f;
+        private float _interactionDuration = 5f;
 
         [Tooltip("The UnityEvent to trigger when interaction is completed.")]
         [SerializeField]
-        private UnityEvent onInteractionComplete;
+        private UnityEvent _onInteractionComplete;
 
         [Header("Sphere Collider Settings")]
         [Tooltip("The initial radius of the SphereCollider.")]
         [SerializeField]
-        private float initialColliderRadius = 1f;
+        private float _initialColliderRadius = 1f;
 
-        private SphereCollider sphereCollider;
-        private float interactionTimeRemaining;
-        private bool isInteracting;
+        [Tooltip("The delay before deactivating the GameObject.")]
+        [SerializeField, Range(0f, 5f)]
+        private float _deactivationDelay = 1f;
+
+        private SphereCollider _sphereCollider;
+        private float _interactionTimeRemaining;
+        private bool _isInteracting;
 
         private void Awake()
         {
             // Ensure the SphereCollider is attached and update its radius
-            sphereCollider = GetComponent<SphereCollider>();
-            if (sphereCollider != null)
+            _sphereCollider = GetComponent<SphereCollider>();
+            if (_sphereCollider != null)
             {
                 // Set the initial radius of the SphereCollider
-                sphereCollider.radius = initialColliderRadius;
+                _sphereCollider.radius = _initialColliderRadius;
             }
             else
             {
@@ -44,51 +50,61 @@ namespace _Game.Scripts._Base
 
         private void Update()
         {
-            if (isInteracting)
+            if (_isInteracting)
             {
                 // Update the interaction progress
-                interactionTimeRemaining -= Time.deltaTime;
-                if (interactionTimeRemaining <= 0)
+                _interactionTimeRemaining -= Time.deltaTime;
+                if (_interactionTimeRemaining <= 0)
                 {
                     CompleteInteraction();
                 }
             }
         }
 
-        public void StartInteraction()
+        public virtual void StartInteraction()
         {
-            if (!isInteracting)
+            if (!_isInteracting)
             {
-                isInteracting = true;
-                interactionTimeRemaining = interactionDuration;
+                _isInteracting = true;
+                _interactionTimeRemaining = _interactionDuration;
                 // Start filling the progress bar here
             }
         }
 
-        public void CompleteInteraction()
+        public virtual void CompleteInteraction()
         {
-            if (isInteracting)
+            if (_isInteracting)
             {
-                isInteracting = false;
+                _isInteracting = false;
                 // Trigger the event
-                onInteractionComplete?.Invoke();
-                // Deactivate the SphereCollider
-                if (sphereCollider != null)
-                {
-                    sphereCollider.enabled = false;
-                }
-                // Deactivate this object
-                gameObject.SetActive(false);
+                _onInteractionComplete?.Invoke();
+                // Start the coroutine to deactivate the object after a delay
+                StartCoroutine(DeactivateAfterDelay());
             }
+        }
+
+        private IEnumerator DeactivateAfterDelay()
+        {
+            // Deactivate the SphereCollider
+            if (_sphereCollider != null)
+            {
+                _sphereCollider.enabled = false;
+            }
+
+            // Wait for the specified delay
+            yield return new WaitForSeconds(_deactivationDelay);
+
+            // Deactivate this object
+            gameObject.SetActive(false);
         }
 
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
-            if (sphereCollider != null)
+            if (_sphereCollider != null)
             {
                 Gizmos.color = Color.green;
-                Gizmos.DrawWireSphere(transform.position, sphereCollider.radius);
+                Gizmos.DrawWireSphere(transform.position, _sphereCollider.radius);
             }
         }
 #endif
