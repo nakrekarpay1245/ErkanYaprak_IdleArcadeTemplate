@@ -6,8 +6,13 @@ namespace _Game.Scripts._Interfaces
     public interface IInteractable
     {
         /// <summary>
-        /// Called when the object is interacted with.
+        /// Starts interaction with the object.
         /// </summary>
-        void Interact();
+        void StartInteraction();
+
+        /// <summary>
+        /// Completes interaction with the object.
+        /// </summary>
+        void CompleteInteraction();
     }
 }

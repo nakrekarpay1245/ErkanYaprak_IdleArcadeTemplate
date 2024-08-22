@@ -6,9 +6,15 @@ namespace _Game.Scripts._Interfaces
     public interface IInteractor
     {
         /// <summary>
-        /// Triggers interaction with an interactable object.
+        /// Starts interaction with the specified interactable object.
         /// </summary>
         /// <param name="interactable">The interactable object.</param>
-        void InteractWith(IInteractable interactable);
+        void StartInteraction(IInteractable interactable);
+
+        /// <summary>
+        /// Completes the interaction with the specified interactable object.
+        /// </summary>
+        /// <param name="interactable">The interactable object.</param>
+        void CompleteInteraction(IInteractable interactable);
     }
 }
