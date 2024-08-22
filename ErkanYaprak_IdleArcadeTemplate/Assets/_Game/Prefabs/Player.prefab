@@ -145,7 +145,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 452a6603967704e4b9e86690f57a71b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectRadius: 5
+  _collectRadius: 5
+  _stopMovementOnSpecialCollect: 1
+  _stopDuration: 3
+  _animator: {fileID: 0}
+  _characterController: {fileID: 0}
 --- !u!1001 &1539228770560127733
 PrefabInstance:
   m_ObjectHideFlags: 0
