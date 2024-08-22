@@ -2250,13 +2250,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f46f1fbeeb3e2404d8a61b8d3c2adc54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cameraConfig: {fileID: 11400000, guid: f27b2959fe5d96948937d17a22b40b60, type: 2}
   _targetCharacter: {fileID: 2119229308}
   _camera: {fileID: 330585545}
-  _defaultFOV: 60
-  _maxFOV: 75
-  _smoothSpeed: 2
-  _zoomSpeed: 2
-  _offset: {x: 0, y: 7, z: -7}
 --- !u!4 &1588152414
 Transform:
   m_ObjectHideFlags: 0
