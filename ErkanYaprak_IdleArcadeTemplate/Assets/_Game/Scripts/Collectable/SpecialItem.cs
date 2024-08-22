@@ -9,7 +9,7 @@ namespace _Game.Scripts.Collectable
     /// <summary>
     /// Represents a special one-time collectible item with unique behaviors.
     /// </summary>
-    public class SpecialCollectible : AbstractBaseCollectible
+    public class SpecialCollectible : AbstractCollectibleBase
     {
         [Header("Special Settings")]
         [SerializeField, Tooltip("Special effect triggered when collected.")]

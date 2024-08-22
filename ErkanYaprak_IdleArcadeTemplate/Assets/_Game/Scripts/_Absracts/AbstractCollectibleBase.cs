@@ -9,7 +9,7 @@ namespace _Game.Scripts._Abstracts
     /// Abstract base class for all collectible items in the game.
     /// </summary>
     [RequireComponent(typeof(SphereCollider))]
-    public abstract class AbstractBaseCollectible : MonoBehaviour, ICollectable
+    public abstract class AbstractCollectibleBase : MonoBehaviour, ICollectable
     {
         [Header("Collectible Settings")]
         [SerializeField, Tooltip("The value of the collectible when collected.")]

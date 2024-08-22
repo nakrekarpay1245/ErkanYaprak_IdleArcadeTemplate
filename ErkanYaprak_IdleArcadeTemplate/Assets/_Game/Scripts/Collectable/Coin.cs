@@ -8,7 +8,7 @@ namespace _Game.Scripts.Collectable
     /// Represents a collectible coin item in the game.
     /// Inherits from BaseCollectible.
     /// </summary>
-    public class Coin : AbstractBaseCollectible
+    public class Coin : AbstractCollectibleBase
     {
         protected override IEnumerator CollectAnimation(Transform collector)
         {
