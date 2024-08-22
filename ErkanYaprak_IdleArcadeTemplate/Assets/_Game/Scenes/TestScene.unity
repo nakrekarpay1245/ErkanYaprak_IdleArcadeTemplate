@@ -2504,26 +2504,6 @@ PrefabInstance:
       propertyPath: _joystick
       value: 
       objectReference: {fileID: 1329682129}
-    - target: {fileID: 1353562623993030306, guid: 798507c3ebfec7b49bd984a7b417be41,
-        type: 3}
-      propertyPath: interactionRadius
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1353562623993030306, guid: 798507c3ebfec7b49bd984a7b417be41,
-        type: 3}
-      propertyPath: _interactionRadius
-      value: 2.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1353562623993030306, guid: 798507c3ebfec7b49bd984a7b417be41,
-        type: 3}
-      propertyPath: interactableLayerMask.m_Bits
-      value: 128
-      objectReference: {fileID: 0}
-    - target: {fileID: 1353562623993030306, guid: 798507c3ebfec7b49bd984a7b417be41,
-        type: 3}
-      propertyPath: _interactableLayerMask.m_Bits
-      value: 128
-      objectReference: {fileID: 0}
     - target: {fileID: 2075728640209349975, guid: 798507c3ebfec7b49bd984a7b417be41,
         type: 3}
       propertyPath: m_LocalPosition.x

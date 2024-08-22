@@ -69,15 +69,5 @@ namespace _Game.Scripts.TopDownCharacter
             // Reactivate or handle accordingly
             gameObject.SetActive(false);  // Example: Disable the character after death
         }
-
-        /// <summary>
-        /// Draws Gizmos to visualize the character's health.
-        /// </summary>
-        private void OnDrawGizmosSelected()
-        {
-            // Example Gizmo to show current health in editor
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, 1f);
-        }
     }
 }

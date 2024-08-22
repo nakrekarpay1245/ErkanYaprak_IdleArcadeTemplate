@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4316162310213479071}
   - component: {fileID: 2630371113431945016}
   - component: {fileID: 1353562623993030306}
+  - component: {fileID: 2641047527325895694}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -181,10 +182,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d22bac8cc6d7774991d85953fe07412, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionRadius: 5
-  interactableLayerMask:
+  _interactionRadius: 2.1
+  _interactableLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
+--- !u!114 &2641047527325895694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5215044049060393520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25056e09dd7bcf1479d212dc2e27c017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _damageAmount: 1
+  _attackRange: 1
+  _detectionRadius: 0.75
+  _attackDelay: 1
+  _attackDuration: 0.1
+  _attackOffset: 0.5
+  _damageableLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  _attackInterval: 2
+  _minimumAttackSpeed: 0.25
 --- !u!1 &5537687980304358605
 GameObject:
   m_ObjectHideFlags: 0

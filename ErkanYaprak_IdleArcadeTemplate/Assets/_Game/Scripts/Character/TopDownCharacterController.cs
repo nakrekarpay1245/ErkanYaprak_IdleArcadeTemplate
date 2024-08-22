@@ -32,6 +32,11 @@ namespace _Game.Scripts.TopDownCharacter
         private Vector3 _velocity;
         private Vector3 _currentVelocity;
         private bool _isMovementPaused = false; // Track if movement is paused
+        public bool IsMovementPaused
+        {
+            get => _isMovementPaused;
+            set => _isMovementPaused = value;
+        }
         private bool _isCoroutineRunning = false; // Track if coroutine is running
         private float _savedMovementSpeed; // Store the original speed
 
@@ -42,6 +47,7 @@ namespace _Game.Scripts.TopDownCharacter
         [Header("References")]
         [SerializeField] private TopDownCharacterAnimator _animator;
         [SerializeField] private Joystick _joystick;
+
 
         private void Awake()
         {
