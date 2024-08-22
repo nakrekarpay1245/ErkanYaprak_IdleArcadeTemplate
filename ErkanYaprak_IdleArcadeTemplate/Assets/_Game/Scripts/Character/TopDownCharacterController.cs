@@ -66,6 +66,9 @@ namespace _Game.Scripts.TopDownCharacter
         [Tooltip("")]
         [SerializeField]
         private TopDownCharacterAnimator _animator;
+        [Tooltip("")]
+        [SerializeField]
+        private Joystick _joystick;
 
         /// <summary>
         /// Initialize components.
@@ -92,8 +95,8 @@ namespace _Game.Scripts.TopDownCharacter
         private void HandleMovement()
         {
             // Get input from keyboard
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
+            float horizontal = Input.GetAxis("Horizontal") + _joystick.Horizontal;
+            float vertical = Input.GetAxis("Vertical") + _joystick.Vertical;
 
             Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
@@ -123,8 +126,8 @@ namespace _Game.Scripts.TopDownCharacter
         private void HandleRotation()
         {
             // Get input from keyboard
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
+            float horizontal = Input.GetAxis("Horizontal") + _joystick.Horizontal;
+            float vertical = Input.GetAxis("Vertical") + _joystick.Vertical;
 
             Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
