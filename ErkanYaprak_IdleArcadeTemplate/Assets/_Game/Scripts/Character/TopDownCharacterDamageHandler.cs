@@ -12,10 +12,12 @@ namespace _Game.Scripts.TopDownCharacter
     {
         [Header("Character Configuration")]
         [Tooltip("ScriptableObject storing all character configuration parameters.")]
-        [SerializeField] public TopDownCharacterConfigSO _characterConfig;
+        [SerializeField] private TopDownCharacterConfigSO _characterConfig;
 
         private TopDownCharacterAnimator _characterAnimator;
         private TopDownCharacterController _characterController;
+
+        public TopDownCharacterConfigSO CharacterConfig { get => _characterConfig; set => _characterConfig = value; }
 
         private void Awake()
         {

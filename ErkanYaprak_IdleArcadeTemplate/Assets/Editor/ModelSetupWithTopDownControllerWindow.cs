@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.AssetImporters;
 using _Game.Scripts.TopDownCharacter;
+using UnityEditor.Animations;
+using _Game.Scripts.InputHandling;
 
 /// <summary>
 /// Custom editor window for setting up character prefabs with components based on a configuration.
@@ -23,6 +25,9 @@ public class ModelSetupWithTopDownControllerWindow : EditorWindow
     [Tooltip("The character configuration ScriptableObject.")]
     [SerializeField] private TopDownCharacterConfigSO characterConfig;
 
+    [Tooltip("")]
+    [SerializeField] private PlayerInputSO playerInputConfig;
+
     [MenuItem("Tools/Top Down Character Setup")]
     public static void ShowWindow()
     {
@@ -38,6 +43,7 @@ public class ModelSetupWithTopDownControllerWindow : EditorWindow
         prefabName = EditorGUILayout.TextField("Prefab Name", prefabName);
         saveDirectory = EditorGUILayout.TextField("Save Directory", saveDirectory);
         characterConfig = (TopDownCharacterConfigSO)EditorGUILayout.ObjectField("Character Config", characterConfig, typeof(TopDownCharacterConfigSO), false);
+        playerInputConfig = (PlayerInputSO)EditorGUILayout.ObjectField("Player Input Config", playerInputConfig, typeof(PlayerInputSO), false);
 
         // Button to create character prefab
         if (GUILayout.Button("Create Character Prefab"))
@@ -129,7 +135,7 @@ public class ModelSetupWithTopDownControllerWindow : EditorWindow
     {
         AddCharacterController(prefabObject);
         AddAnimator(modelInstance);
-        AddCustomComponents(prefabObject, modelInstance, characterConfig);
+        AddCustomComponents(prefabObject, modelInstance, characterConfig, playerInputConfig);
     }
 
     /// <summary>
@@ -171,42 +177,65 @@ public class ModelSetupWithTopDownControllerWindow : EditorWindow
     /// <param name="prefabObject">The prefab root GameObject.</param>
     /// <param name="modelInstance">The instantiated model GameObject.</param>
     /// <param name="config">The character configuration scriptable object.</param>
-    private void AddCustomComponents(GameObject prefabObject, GameObject modelInstance, TopDownCharacterConfigSO config)
+    private void AddCustomComponents(GameObject prefabObject, GameObject modelInstance, TopDownCharacterConfigSO config, PlayerInputSO playerInputConfig)
     {
         if (config._showControllerParameters)
         {
             var controller = prefabObject.AddComponent<TopDownCharacterController>();
-            controller._characterConfig = config;
+            controller.CharacterConfig = config;
+            controller.PlayerInput = playerInputConfig;
         }
 
         if (config._showAttackParameters)
         {
             var attackHandler = prefabObject.AddComponent<TopDownCharacterAttackHandler>();
-            attackHandler._characterConfig = config;
+            attackHandler.CharacterConfig = config;
         }
 
         if (config._showHealthParameters)
         {
             var damageHandler = prefabObject.AddComponent<TopDownCharacterDamageHandler>();
-            damageHandler._characterConfig = config;
+            damageHandler.CharacterConfig = config;
         }
 
         if (config._showInteractorParameters)
         {
             var interactor = prefabObject.AddComponent<TopDownCharacterInteractor>();
-            interactor._characterConfig = config;
+            interactor.CharacterConfig = config;
         }
 
         if (config._showCollectorParameters)
         {
             var collector = prefabObject.AddComponent<TopDownCharacterCollector>();
-            collector._characterConfig = config;
+            collector.CharacterConfig = config;
         }
 
         if (config._showAnimatorParameters)
         {
             var animator = modelInstance.AddComponent<TopDownCharacterAnimator>();
-            animator._characterConfig = config;
+            animator.CharacterConfig = config;
+
+            Animator animatorComponent = animator.GetComponent<Animator>();
+            if (animatorComponent == null)
+            {
+                animatorComponent = animator.gameObject.AddComponent<Animator>();
+            }
+
+            animatorComponent.applyRootMotion = false;
+            animatorComponent.updateMode = AnimatorUpdateMode.Normal;
+            animatorComponent.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+
+            // Assign the AnimatorController
+            string controllerPath = "Assets/_Game/Animations/MaleCharacter/MaleCharacter.controller";
+            AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerPath);
+            if (controller != null)
+            {
+                animatorComponent.runtimeAnimatorController = controller;
+            }
+            else
+            {
+                Debug.LogError($"AnimatorController not found at path: {controllerPath}");
+            }
         }
     }
 

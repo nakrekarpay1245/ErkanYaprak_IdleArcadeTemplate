@@ -15,7 +15,8 @@ public class TopDownCharacterAnimator : MonoBehaviour
     [SerializeField] private TopDownCharacterController _controller;
 
     [Tooltip("Reference to the character configuration ScriptableObject.")]
-    [SerializeField] public TopDownCharacterConfigSO _characterConfig;
+    [SerializeField] private TopDownCharacterConfigSO _characterConfig;
+    public TopDownCharacterConfigSO CharacterConfig { get => _characterConfig; set => _characterConfig = value; }
 
     // Animator Parameter Hashcodes
     private int _speedHashCode;

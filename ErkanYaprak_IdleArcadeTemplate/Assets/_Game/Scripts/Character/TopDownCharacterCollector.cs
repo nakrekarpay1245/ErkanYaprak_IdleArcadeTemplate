@@ -14,7 +14,7 @@ namespace _Game.Scripts.TopDownCharacter
     {
         [Header("Configuration")]
         [Tooltip("Reference to the character's configuration ScriptableObject.")]
-        [SerializeField] public TopDownCharacterConfigSO _characterConfig;
+        [SerializeField] private TopDownCharacterConfigSO _characterConfig;
 
         [Header("Events")]
         [Tooltip("Action triggered when an item is collected.")]
@@ -28,6 +28,8 @@ namespace _Game.Scripts.TopDownCharacter
 
         [Tooltip("Reference to the TopDownCharacterController for controlling movement.")]
         [SerializeField] private TopDownCharacterController _characterController;
+
+        public TopDownCharacterConfigSO CharacterConfig { get => _characterConfig; set => _characterConfig = value; }
 
         private void Awake()
         {

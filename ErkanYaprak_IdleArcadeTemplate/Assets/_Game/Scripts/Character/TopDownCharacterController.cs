@@ -17,7 +17,7 @@ namespace _Game.Scripts.TopDownCharacter
         [SerializeField] private PlayerInputSO _playerInput;
 
         [Tooltip("ScriptableObject for character configuration.")]
-        [SerializeField] public TopDownCharacterConfigSO _characterConfig;
+        [SerializeField] private TopDownCharacterConfigSO _characterConfig;
 
         private CharacterController _characterController;
         private Vector3 _currentVelocity;
@@ -27,6 +27,9 @@ namespace _Game.Scripts.TopDownCharacter
         private bool _isCoroutineRunning = false;
 
         [HideInInspector] public float Speed;
+
+        public TopDownCharacterConfigSO CharacterConfig { get => _characterConfig; set => _characterConfig = value; }
+        public PlayerInputSO PlayerInput { get => _playerInput; set => _playerInput = value; }
 
         private void Awake()
         {

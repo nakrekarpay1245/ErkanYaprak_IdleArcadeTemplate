@@ -13,9 +13,11 @@ namespace _Game.Scripts.TopDownCharacter
     {
         [Header("Configuration")]
         [Tooltip("The character configuration ScriptableObject.")]
-        [SerializeField] public TopDownCharacterConfigSO _characterConfig;
+        [SerializeField] private TopDownCharacterConfigSO _characterConfig;
 
         private IInteractable _currentInteractable;
+
+        public TopDownCharacterConfigSO CharacterConfig { get => _characterConfig; set => _characterConfig = value; }
 
         private void Update()
         {

@@ -15,7 +15,7 @@ namespace _Game.Scripts.TopDownCharacter
     {
         [Header("References")]
         [Tooltip("ScriptableObject that holds all character configuration data.")]
-        [SerializeField] public TopDownCharacterConfigSO _characterConfig;
+        [SerializeField] private TopDownCharacterConfigSO _characterConfig;
 
         [Tooltip("Reference to the character's controller script.")]
         [SerializeField] private TopDownCharacterController _characterController;
@@ -29,6 +29,8 @@ namespace _Game.Scripts.TopDownCharacter
         private float _nextAttackTime = 0f;
         private bool _isAttacking = false;
         private IDamageable _currentTarget;
+
+        public TopDownCharacterConfigSO CharacterConfig { get => _characterConfig; set => _characterConfig = value; }
 
         private void Awake()
         {
