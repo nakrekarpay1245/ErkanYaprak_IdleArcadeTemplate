@@ -23,13 +23,13 @@ namespace _Game.Scripts.Test
         private float _disableDuration = 5f;
 
         private Collider _collider;
-        private MeshRenderer _meshRenderer;
+        private GameObject _model;
 
         private void Awake()
         {
             // Cache the Collider and MeshRenderer components
             _collider = GetComponent<Collider>();
-            _meshRenderer = GetComponent<MeshRenderer>();
+            _model = transform.GetChild(0).gameObject;
         }
 
         /// <summary>
@@ -69,9 +69,9 @@ namespace _Game.Scripts.Test
                 _collider.enabled = false;
             }
 
-            if (_meshRenderer != null)
+            if (_model != null)
             {
-                _meshRenderer.enabled = false;
+                _model.SetActive(false);
             }
 
             // Wait for the specified duration
@@ -83,9 +83,9 @@ namespace _Game.Scripts.Test
                 _collider.enabled = true;
             }
 
-            if (_meshRenderer != null)
+            if (_model != null)
             {
-                _meshRenderer.enabled = true;
+                _model.SetActive(true);
             }
         }
     }
