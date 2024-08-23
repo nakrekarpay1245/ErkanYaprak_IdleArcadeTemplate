@@ -9,6 +9,26 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "TopDownCharacterData", menuName = "Data/TopDownCharacterData")]
 public class TopDownCharacterConfigSO : ScriptableObject
 {
+    // Visibility toggles for different categories
+    [Header("Visibility Toggles")]
+    [Tooltip("Show/Hide Controller Parameters")]
+    public bool _showControllerParameters = true;
+
+    [Tooltip("Show/Hide Collector Parameters")]
+    public bool _showCollectorParameters = true;
+
+    [Tooltip("Show/Hide Animator Parameters")]
+    public bool _showAnimatorParameters = true;
+
+    [Tooltip("Show/Hide Attack Parameters")]
+    public bool _showAttackParameters = true;
+
+    [Tooltip("Show/Hide Health Parameters")]
+    public bool _showHealthParameters = true;
+
+    [Tooltip("Show/Hide Interactor Parameters")]
+    public bool _showInteractorParameters = true;
+
     // Controller Parameters
     [Header("Controller Parameters")]
     [Tooltip("Movement speed of the character.")]
