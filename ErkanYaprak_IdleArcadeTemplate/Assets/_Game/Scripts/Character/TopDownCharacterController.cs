@@ -1,13 +1,15 @@
+using _Game.Scripts.InputHandling;
 using System.Collections;
 using UnityEngine;
 
 namespace _Game.Scripts.TopDownCharacter
 {
     /// <summary>
-    /// This class handles the character's movement and rotation in an idle-arcade style game.
-    /// It uses Unity's CharacterController component to manage physics-based movement.
-    /// The character's speed is dynamically set in the Animator based on movement input.
-    /// Additionally, it implements smooth acceleration and deceleration for more natural movement.
+    /// This class manages the character's movement and rotation in an idle-arcade style game.
+    /// It uses Unity's CharacterController for physics-based movement and 
+    /// leverages a PlayerInputSO to handle all input logic.
+    /// Implements smooth acceleration, deceleration, and gravity, while dynamically 
+    /// adjusting animation.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
     public class TopDownCharacterController : MonoBehaviour
@@ -19,7 +21,7 @@ namespace _Game.Scripts.TopDownCharacter
         [Tooltip("The rate at which the character accelerates and decelerates.")]
         [SerializeField] private float _acceleration = 2f;
 
-        [Tooltip("The minimum speed required to rotate the character.")]
+        [Tooltip("Minimum speed required for rotation.")]
         [SerializeField] private float _rotationSpeedThreshold = 0.1f;
 
         [Tooltip("Speed at which the character rotates to face movement direction.")]
@@ -28,89 +30,92 @@ namespace _Game.Scripts.TopDownCharacter
         [Tooltip("The gravity force applied to the character.")]
         [SerializeField] private float _gravity = -9.81f;
 
+        [Header("Input Settings")]
+        [Tooltip("The scriptable object for handling player input.")]
+        [SerializeField] private PlayerInputSO _playerInput;
+
         private CharacterController _characterController;
-        private Vector3 _velocity;
         private Vector3 _currentVelocity;
-        private bool _isMovementPaused = false; // Track if movement is paused
-        public bool IsMovementPaused
-        {
-            get => _isMovementPaused;
-            set => _isMovementPaused = value;
-        }
-        private bool _isCoroutineRunning = false; // Track if coroutine is running
-        private float _savedMovementSpeed; // Store the original speed
+        private Vector3 _verticalVelocity;
 
-        [Header("Publics")]
-        [HideInInspector]
-        public float Speed;
+        private bool _isMovementPaused = false;
+        private bool _isCoroutineRunning = false;
+        private float _savedMovementSpeed;
 
-        [Header("References")]
-        [SerializeField] private TopDownCharacterAnimator _animator;
-        [SerializeField] private Joystick _joystick;
-
+        [HideInInspector] public float Speed;
 
         private void Awake()
         {
             _characterController = GetComponent<CharacterController>();
-            _animator = GetComponentInChildren<TopDownCharacterAnimator>();
+        }
+
+        private void OnEnable()
+        {
+            _playerInput.OnMoveInput.AddListener(HandleMovementInput);
+        }
+
+        private void OnDisable()
+        {
+            _playerInput.OnMoveInput.RemoveListener(HandleMovementInput);
         }
 
         private void Update()
         {
             if (!_isMovementPaused)
             {
-                HandleMovement();
-                HandleRotation();
+                ApplyGravity();
+                UpdateCharacterRotation();
             }
         }
 
         /// <summary>
-        /// Handles the character's movement based on player input.
-        /// Implements smooth acceleration and deceleration.
+        /// Receives the movement input from PlayerInputSO and applies smooth movement logic.
         /// </summary>
-        private void HandleMovement()
+        /// <param name="input">The movement input vector (Vector2).</param>
+        private void HandleMovementInput(Vector2 input)
         {
-            float horizontal = Input.GetAxis("Horizontal") + _joystick.Horizontal;
-            float vertical = Input.GetAxis("Vertical") + _joystick.Vertical;
+            if (_isMovementPaused) return;
 
-            Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+            Vector3 direction = new Vector3(input.x, 0f, input.y).normalized;
             Vector3 targetVelocity = direction * _movementSpeed;
 
-            _currentVelocity = Vector3.Lerp(_currentVelocity, targetVelocity, _acceleration * Time.deltaTime);
+            _currentVelocity = Vector3.Lerp(_currentVelocity, targetVelocity,
+                _acceleration * Time.deltaTime);
             Speed = _currentVelocity.magnitude / _movementSpeed;
 
             _characterController.Move(_currentVelocity * Time.deltaTime);
-
-            if (_characterController.isGrounded && _velocity.y < 0)
-            {
-                _velocity.y = 0f;
-            }
-
-            _velocity.y += _gravity * Time.deltaTime;
-            _characterController.Move(_velocity * Time.deltaTime);
         }
 
         /// <summary>
-        /// Handles the character's rotation to face the movement direction.
+        /// Applies gravity to the character, ensuring they remain grounded.
         /// </summary>
-        private void HandleRotation()
+        private void ApplyGravity()
         {
-            float horizontal = Input.GetAxis("Horizontal") + _joystick.Horizontal;
-            float vertical = Input.GetAxis("Vertical") + _joystick.Vertical;
-
-            Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-
-            if (direction.magnitude >= _rotationSpeedThreshold)
+            if (_characterController.isGrounded && _verticalVelocity.y < 0)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                _verticalVelocity.y = 0f;
+            }
+
+            _verticalVelocity.y += _gravity * Time.deltaTime;
+            _characterController.Move(_verticalVelocity * Time.deltaTime);
+        }
+
+        /// <summary>
+        /// Rotates the character smoothly to face the movement direction.
+        /// </summary>
+        private void UpdateCharacterRotation()
+        {
+            if (_currentVelocity.sqrMagnitude >= _rotationSpeedThreshold *
+                _rotationSpeedThreshold)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(_currentVelocity);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation,
                     targetRotation, _rotationSpeed * Time.deltaTime);
             }
         }
 
         /// <summary>
-        /// Pauses the character's movement for a specified duration.
-        /// The movement speed is restored after the duration ends.
+        /// Pauses the character's movement for a specified duration, restoring it afterward.
         /// </summary>
         /// <param name="duration">The time in seconds to pause movement.</param>
         public void PauseMovement(float duration)
@@ -122,7 +127,7 @@ namespace _Game.Scripts.TopDownCharacter
         }
 
         /// <summary>
-        /// Coroutine that pauses movement for the given duration.
+        /// Coroutine that pauses the character's movement for the given duration.
         /// </summary>
         /// <param name="duration">The pause duration in seconds.</param>
         /// <returns></returns>
@@ -130,12 +135,12 @@ namespace _Game.Scripts.TopDownCharacter
         {
             _isCoroutineRunning = true;
             _isMovementPaused = true;
-            _savedMovementSpeed = _movementSpeed; // Store the original speed
-            _movementSpeed = 0f; // Set movement speed to 0
+            _savedMovementSpeed = _movementSpeed;
+            _movementSpeed = 0f;
 
             yield return new WaitForSeconds(duration);
 
-            _movementSpeed = _savedMovementSpeed; // Restore the original speed
+            _movementSpeed = _savedMovementSpeed;
             _isMovementPaused = false;
             _isCoroutineRunning = false;
         }
