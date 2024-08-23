@@ -26,7 +26,7 @@ namespace _Game.Scripts._Abstracts
             SetHealth();
         }
 
-        public virtual void SetHealth()
+        protected virtual void SetHealth()
         {
             _health = _maxHealth;
             RaiseHealthChangedEvent(_health, _maxHealth);
