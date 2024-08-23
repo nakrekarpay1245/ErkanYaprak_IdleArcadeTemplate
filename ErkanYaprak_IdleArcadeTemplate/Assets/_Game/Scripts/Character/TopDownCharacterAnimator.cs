@@ -15,7 +15,7 @@ public class TopDownCharacterAnimator : MonoBehaviour
     [SerializeField] private TopDownCharacterController _controller;
 
     [Tooltip("Reference to the character configuration ScriptableObject.")]
-    [SerializeField] private TopDownCharacterConfigSO _config;
+    [SerializeField] public TopDownCharacterConfigSO _characterConfig;
 
     // Animator Parameter Hashcodes
     private int _speedHashCode;
@@ -31,11 +31,11 @@ public class TopDownCharacterAnimator : MonoBehaviour
     private void Awake()
     {
         // Fetching animator parameter keys from the configuration
-        _speedHashCode = Animator.StringToHash(_config.SpeedAnimatorParameterKey);
-        _isHurtHashCode = Animator.StringToHash(_config.IsHurtAnimatorParameterKey);
-        _isDeadHashCode = Animator.StringToHash(_config.IsDeadAnimatorParameterKey);
-        _isAttackHashCode = Animator.StringToHash(_config.IsAttackAnimatorParameterKey);
-        _isWinHashCode = Animator.StringToHash(_config.IsWinAnimatorParameterKey);
+        _speedHashCode = Animator.StringToHash(_characterConfig.SpeedAnimatorParameterKey);
+        _isHurtHashCode = Animator.StringToHash(_characterConfig.IsHurtAnimatorParameterKey);
+        _isDeadHashCode = Animator.StringToHash(_characterConfig.IsDeadAnimatorParameterKey);
+        _isAttackHashCode = Animator.StringToHash(_characterConfig.IsAttackAnimatorParameterKey);
+        _isWinHashCode = Animator.StringToHash(_characterConfig.IsWinAnimatorParameterKey);
 
         // Component references
         _animator = GetComponent<Animator>();

@@ -12,7 +12,7 @@ namespace _Game.Scripts.TopDownCharacter
     {
         [Header("Character Configuration")]
         [Tooltip("ScriptableObject storing all character configuration parameters.")]
-        [SerializeField] private TopDownCharacterConfigSO _characterConfig;
+        [SerializeField] public TopDownCharacterConfigSO _characterConfig;
 
         private TopDownCharacterAnimator _characterAnimator;
         private TopDownCharacterController _characterController;

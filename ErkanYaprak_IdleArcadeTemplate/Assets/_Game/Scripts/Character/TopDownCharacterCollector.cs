@@ -14,7 +14,7 @@ namespace _Game.Scripts.TopDownCharacter
     {
         [Header("Configuration")]
         [Tooltip("Reference to the character's configuration ScriptableObject.")]
-        [SerializeField] private TopDownCharacterConfigSO _characterConfig;
+        [SerializeField] public TopDownCharacterConfigSO _characterConfig;
 
         [Header("Events")]
         [Tooltip("Action triggered when an item is collected.")]

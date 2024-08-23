@@ -15,7 +15,7 @@ namespace _Game.Scripts.TopDownCharacter
     {
         [Header("References")]
         [Tooltip("ScriptableObject that holds all character configuration data.")]
-        [SerializeField] private TopDownCharacterConfigSO _characterConfig;
+        [SerializeField] public TopDownCharacterConfigSO _characterConfig;
 
         [Tooltip("Reference to the character's controller script.")]
         [SerializeField] private TopDownCharacterController _characterController;
@@ -62,7 +62,7 @@ namespace _Game.Scripts.TopDownCharacter
             else
             {
                 StopAllCoroutines();
-                _weapon.StopTrailEffect();
+                _weapon?.StopTrailEffect();
                 _currentTarget = null;
             }
         }
@@ -124,7 +124,7 @@ namespace _Game.Scripts.TopDownCharacter
         private IEnumerator PerformAttackWithDelay()
         {
             _characterAnimator.PlayAttackAnimation();
-            _weapon.PlayTrailEffect();
+            _weapon?.PlayTrailEffect();
 
             // Wait for the attack delay
             yield return new WaitForSeconds(_characterConfig.AttackDelay);
@@ -135,7 +135,7 @@ namespace _Game.Scripts.TopDownCharacter
             // Wait for the attack duration to end
             yield return new WaitForSeconds(_characterConfig.AttackDuration);
 
-            _weapon.StopTrailEffect();
+            _weapon?.StopTrailEffect();
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace _Game.Scripts.TopDownCharacter
                     // Apply damage to each IDamageable component found
                     DealDamage(damageable, _characterConfig.DamageAmount);
 
-                    _weapon.StopTrailEffect();
+                    _weapon?.StopTrailEffect();
                 }
             }
         }
