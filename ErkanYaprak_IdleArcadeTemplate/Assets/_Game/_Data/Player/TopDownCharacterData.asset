@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f3e06c3883e9d540ad0b5dc563ad8af, type: 3}
   m_Name: TopDownCharacterData
   m_EditorClassIdentifier: 
+  _showControllerParameters: 1
+  _showCollectorParameters: 1
+  _showAnimatorParameters: 1
+  _showAttackParameters: 1
+  _showHealthParameters: 1
+  _showInteractorParameters: 1
   _movementSpeed: 5
   _acceleration: 2
   _rotationSpeedThreshold: 0.1
