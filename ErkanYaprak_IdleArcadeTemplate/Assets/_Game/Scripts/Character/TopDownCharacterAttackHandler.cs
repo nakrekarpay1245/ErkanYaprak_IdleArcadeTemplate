@@ -32,7 +32,9 @@ namespace _Game.Scripts.TopDownCharacter
         [Tooltip("Interval between consecutive attacks.")]
         [SerializeField] private float _attackInterval = 1f;
 
-        [SerializeField] private float _minimumAttackSpeed = 0.25f;
+        [SerializeField] private float _minimumSpeedForAttack = 0.25f;
+
+        [SerializeField] private Weapon _weapon;
 
         private TopDownCharacterController _characterController;
         private TopDownCharacterAnimator _characterAnimator;
@@ -43,11 +45,12 @@ namespace _Game.Scripts.TopDownCharacter
         {
             _characterController = GetComponent<TopDownCharacterController>();
             _characterAnimator = GetComponentInChildren<TopDownCharacterAnimator>();
+            _weapon = GetComponentInChildren<Weapon>();
         }
 
         private void Update()
         {
-            if (_characterController.Speed < _minimumAttackSpeed)
+            if (_characterController.Speed < _minimumSpeedForAttack)
             {
                 if (Time.time >= _nextAttackTime)
                 {
@@ -62,6 +65,7 @@ namespace _Game.Scripts.TopDownCharacter
             else
             {
                 StopAllCoroutines();
+                _weapon.StopTrailEffect();
             }
         }
 
@@ -90,6 +94,7 @@ namespace _Game.Scripts.TopDownCharacter
         private IEnumerator PerformAttackWithDelay()
         {
             _characterAnimator.PlayAttackAnimation();
+            _weapon.PlayTrailEffect();
 
             // Wait for the attack delay
             yield return new WaitForSeconds(_attackDelay);
@@ -99,6 +104,8 @@ namespace _Game.Scripts.TopDownCharacter
 
             // Wait for the attack duration to end
             yield return new WaitForSeconds(_attackDuration);
+
+            _weapon.StopTrailEffect();
 
             // Optional: reset attack state if needed
             _isAttacking = false;
@@ -123,6 +130,8 @@ namespace _Game.Scripts.TopDownCharacter
                     Debug.Log(hitCollider.name);
                     // Apply damage to each IDamageable component found
                     DealDamage(damageable, _damageAmount);
+
+                    _weapon.StopTrailEffect();
                 }
             }
         }
