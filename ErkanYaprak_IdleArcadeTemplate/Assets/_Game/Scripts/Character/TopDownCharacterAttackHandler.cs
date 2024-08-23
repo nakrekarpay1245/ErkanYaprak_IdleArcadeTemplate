@@ -3,12 +3,12 @@ using System.Linq;
 using UnityEngine;
 using _Game.Scripts._Interfaces;
 using _Game.Scripts._Abstracts;
+using System.Collections.Generic;
 
 namespace _Game.Scripts.TopDownCharacter
 {
     /// <summary>
-    /// This class handles the attack functionality of the character,
-    /// including detection and attack mechanisms with specified delays and durations.
+    /// Manages the attack functionality of the character, including detection and attack mechanisms with specified delays and durations.
     /// </summary>
     public class TopDownCharacterAttackHandler : AbstractDamagerBase
     {
@@ -36,10 +36,15 @@ namespace _Game.Scripts.TopDownCharacter
 
         [SerializeField] private Weapon _weapon;
 
+        [Header("Rotation Settings")]
+        [Tooltip("Speed at which the character rotates to face the target.")]
+        [SerializeField] private float _rotationSpeed = 5f;
+
         private TopDownCharacterController _characterController;
         private TopDownCharacterAnimator _characterAnimator;
         private float _nextAttackTime = 0f;
         private bool _isAttacking = false;
+        private IDamageable _currentTarget;
 
         private void Awake()
         {
@@ -61,31 +66,70 @@ namespace _Game.Scripts.TopDownCharacter
                         StartCoroutine(PerformAttackWithDelay());
                     }
                 }
+
+                // Continuously face the current target if available
+                if (_currentTarget != null)
+                {
+                    FaceTarget(_currentTarget);
+                }
             }
             else
             {
                 StopAllCoroutines();
                 _weapon.StopTrailEffect();
+                _currentTarget = null;
             }
         }
 
         /// <summary>
-        /// Detects IDamageable targets within the detection radius.
+        /// Detects IDamageable targets within the detection radius and updates the nearest target.
         /// </summary>
         private void PerformDetection()
         {
             // Find all colliders within the detection radius
-            Collider[] hitColliders = Physics.OverlapSphere(transform.position,
-                _detectionRadius);
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, _detectionRadius);
 
             // Filter out IDamageable targets and include only those on the Damageable layer
             var damageableTargets = hitColliders
                 .Where(collider => IsOnDamageableLayer(collider))
                 .Select(collider => collider.GetComponent<IDamageable>())
-                .Where(damageable => damageable != null)
+                .Where(damageable => damageable != null && damageable.IsAlive())
                 .ToList();
 
+            // Update the attacking state and nearest target
             _isAttacking = damageableTargets.Count > 0;
+            _currentTarget = _isAttacking ? FindNearestTarget(damageableTargets) : null;
+        }
+
+        /// <summary>
+        /// Finds the nearest target from the list of detected IDamageable targets.
+        /// </summary>
+        /// <param name="targets">The list of detected targets.</param>
+        /// <returns>The nearest IDamageable target.</returns>
+        private IDamageable FindNearestTarget(List<IDamageable> targets)
+        {
+            return targets
+                .OrderBy(target => Vector3.Distance(transform.position, (target as MonoBehaviour).transform.position))
+                .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Rotates the character to smoothly face the nearest target using Quaternion calculations.
+        /// </summary>
+        /// <param name="target">The nearest IDamageable target.</param>
+        private void FaceTarget(IDamageable target)
+        {
+            // Get the position of the target
+            Vector3 targetPosition = (target as MonoBehaviour).transform.position;
+
+            // Calculate the direction to the target
+            Vector3 directionToTarget = (targetPosition - transform.position).normalized;
+
+            // Calculate the rotation needed to face the target
+            Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+
+            // Smoothly rotate towards the target
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * _rotationSpeed);
         }
 
         /// <summary>
@@ -106,9 +150,6 @@ namespace _Game.Scripts.TopDownCharacter
             yield return new WaitForSeconds(_attackDuration);
 
             _weapon.StopTrailEffect();
-
-            // Optional: reset attack state if needed
-            _isAttacking = false;
         }
 
         /// <summary>
@@ -120,12 +161,11 @@ namespace _Game.Scripts.TopDownCharacter
             Vector3 attackPosition = transform.position + transform.forward * _attackOffset;
 
             // Find all colliders within the attack radius
-            Collider[] hitColliders = Physics.OverlapSphere(attackPosition, _attackRange,
-                _damageableLayerMask);
+            Collider[] hitColliders = Physics.OverlapSphere(attackPosition, _attackRange, _damageableLayerMask);
 
             foreach (var hitCollider in hitColliders)
             {
-                if (hitCollider.TryGetComponent(out IDamageable damageable))
+                if (hitCollider.TryGetComponent(out IDamageable damageable) && damageable.IsAlive())
                 {
                     Debug.Log(hitCollider.name);
                     // Apply damage to each IDamageable component found
