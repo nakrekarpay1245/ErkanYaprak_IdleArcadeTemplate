@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.AssetImporters;
 using _Game.Scripts.TopDownCharacter;
-using UnityEditor.Animations;
 using _Game.Scripts.InputHandling;
+using UnityEditor.Animations;
 
 /// <summary>
 /// Custom editor window for setting up character prefabs with components based on a configuration.
@@ -25,7 +25,7 @@ public class ModelSetupWithTopDownControllerWindow : EditorWindow
     [Tooltip("The character configuration ScriptableObject.")]
     [SerializeField] private TopDownCharacterConfigSO characterConfig;
 
-    [Tooltip("")]
+    [Tooltip("The player input configuration ScriptableObject.")]
     [SerializeField] private PlayerInputSO playerInputConfig;
 
     [MenuItem("Tools/Top Down Character Setup")]
@@ -48,13 +48,13 @@ public class ModelSetupWithTopDownControllerWindow : EditorWindow
         // Button to create character prefab
         if (GUILayout.Button("Create Character Prefab"))
         {
-            if (model != null && characterConfig != null)
+            if (model != null && characterConfig != null && playerInputConfig != null)
             {
                 CreateCharacterPrefab();
             }
             else
             {
-                Debug.LogWarning("Please assign both a model and character configuration.");
+                Debug.LogWarning("Please assign all required fields.");
             }
         }
     }
@@ -139,36 +139,32 @@ public class ModelSetupWithTopDownControllerWindow : EditorWindow
     }
 
     /// <summary>
-    /// Adds a CharacterController component to the prefab root, ensuring it is present before setting properties.
+    /// Adds a CharacterController component to the prefab root if it does not already exist.
     /// </summary>
     /// <param name="prefabObject">The prefab root GameObject.</param>
     private void AddCharacterController(GameObject prefabObject)
     {
-        CharacterController characterController = prefabObject.GetComponent<CharacterController>();
+        var characterController = prefabObject.GetComponent<CharacterController>();
         if (characterController == null)
         {
             characterController = prefabObject.AddComponent<CharacterController>();
-        }
-        // Safeguard against possible null reference
-        if (characterController != null)
-        {
-            characterController.center = Vector3.up * 1;
+            characterController.center = Vector3.up;
             characterController.height = 2;
         }
     }
 
     /// <summary>
-    /// Adds an Animator component to the model instance.
+    /// Adds an Animator component to the model instance if it does not already exist.
     /// </summary>
     /// <param name="modelInstance">The instantiated model GameObject.</param>
     private void AddAnimator(GameObject modelInstance)
     {
-        Animator animator = modelInstance.GetComponent<Animator>();
+        var animator = modelInstance.GetComponent<Animator>();
         if (animator == null)
         {
             animator = modelInstance.AddComponent<Animator>();
         }
-        animator.runtimeAnimatorController = null; // You can set this to a specific animator controller if required
+        animator.runtimeAnimatorController = null; // Set this to a specific animator controller if needed
     }
 
     /// <summary>
@@ -176,7 +172,8 @@ public class ModelSetupWithTopDownControllerWindow : EditorWindow
     /// </summary>
     /// <param name="prefabObject">The prefab root GameObject.</param>
     /// <param name="modelInstance">The instantiated model GameObject.</param>
-    /// <param name="config">The character configuration scriptable object.</param>
+    /// <param name="config">The character configuration ScriptableObject.</param>
+    /// <param name="playerInputConfig">The player input configuration ScriptableObject.</param>
     private void AddCustomComponents(GameObject prefabObject, GameObject modelInstance, TopDownCharacterConfigSO config, PlayerInputSO playerInputConfig)
     {
         if (config._showControllerParameters)
@@ -215,10 +212,10 @@ public class ModelSetupWithTopDownControllerWindow : EditorWindow
             var animator = modelInstance.AddComponent<TopDownCharacterAnimator>();
             animator.CharacterConfig = config;
 
-            Animator animatorComponent = animator.GetComponent<Animator>();
+            var animatorComponent = modelInstance.GetComponent<Animator>();
             if (animatorComponent == null)
             {
-                animatorComponent = animator.gameObject.AddComponent<Animator>();
+                animatorComponent = modelInstance.AddComponent<Animator>();
             }
 
             animatorComponent.applyRootMotion = false;
