@@ -7,17 +7,13 @@ namespace _Game.Scripts.TopDownCharacter
     /// <summary>
     /// Handles interaction with the nearest IInteractable objects within a specified radius.
     /// Starts and cancels interactions based on proximity to the player character.
+    /// Uses configuration data from TopDownCharacterConfigSO for interaction settings.
     /// </summary>
     public class TopDownCharacterInteractor : MonoBehaviour
     {
-        [Header("Interaction Settings")]
-        [Tooltip("The radius within which to detect interactable objects.")]
-        [SerializeField, Range(1f, 10f)]
-        private float _interactionRadius = 5f;
-
-        [Tooltip("The layer mask to filter interactable objects.")]
-        [SerializeField]
-        private LayerMask _interactableLayerMask;
+        [Header("Configuration")]
+        [Tooltip("The character configuration ScriptableObject.")]
+        [SerializeField] private TopDownCharacterConfigSO _characterConfig;
 
         private IInteractable _currentInteractable;
 
@@ -53,12 +49,12 @@ namespace _Game.Scripts.TopDownCharacter
         }
 
         /// <summary>
-        /// Finds the closest interactable object within the specified radius.
+        /// Finds the closest interactable object within the specified radius using the configuration data.
         /// </summary>
         /// <returns>The closest interactable object, or null if none are within range.</returns>
         private IInteractable FindClosestInteractable()
         {
-            Collider[] colliders = Physics.OverlapSphere(transform.position, _interactionRadius, _interactableLayerMask);
+            Collider[] colliders = Physics.OverlapSphere(transform.position, _characterConfig.InteractionRadius, _characterConfig.InteractableLayerMask);
 
             return colliders
                 .Select(collider => collider.GetComponent<IInteractable>())
@@ -99,7 +95,7 @@ namespace _Game.Scripts.TopDownCharacter
             if (interactable == null) return false;
 
             float distance = Vector3.Distance(transform.position, (interactable as Component).transform.position);
-            return distance <= _interactionRadius;
+            return distance <= _characterConfig.InteractionRadius;
         }
 
 #if UNITY_EDITOR
@@ -109,7 +105,7 @@ namespace _Game.Scripts.TopDownCharacter
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(transform.position, _interactionRadius);
+            Gizmos.DrawWireSphere(transform.position, _characterConfig.InteractionRadius);
         }
 #endif
     }

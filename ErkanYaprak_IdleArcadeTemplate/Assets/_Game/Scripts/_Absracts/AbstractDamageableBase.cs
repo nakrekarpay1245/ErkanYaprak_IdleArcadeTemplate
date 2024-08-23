@@ -26,6 +26,9 @@ namespace _Game.Scripts._Abstracts
             SetHealth();
         }
 
+        /// <summary>
+        /// Sets the object's health to its maximum value.
+        /// </summary>
         protected virtual void SetHealth()
         {
             _health = _maxHealth;
@@ -38,40 +41,65 @@ namespace _Game.Scripts._Abstracts
         /// <param name="damageAmount">The amount of damage to apply.</param>
         public virtual void TakeDamage(float damageAmount)
         {
-            _health -= damageAmount;
-
-            //Debug.Log("Taked Damage: " + damageAmount + "/// my health is: " + _health);
-
-            if (_health <= 0 && !_isDie)
+            if (!_isDie)
             {
-                Die();
-            }
+                _health -= damageAmount;
 
-            OnHealthChanged?.Invoke(_health, _maxHealth);
+                if (_health <= 0)
+                {
+                    Die();
+                }
+
+                RaiseHealthChangedEvent(_health, _maxHealth);
+            }
         }
 
+        /// <summary>
+        /// Triggers the object's death sequence.
+        /// </summary>
         public virtual void Die()
         {
-            _isDie = true;
+            if (!_isDie)
+            {
+                _isDie = true;
+                // Additional death logic can be added here
+            }
         }
 
+        /// <summary>
+        /// Checks if the object is still alive.
+        /// </summary>
+        /// <returns>True if the object is alive; otherwise, false.</returns>
+        public bool IsAlive()
+        {
+            return !_isDie && _health > 0;
+        }
+
+        /// <summary>
+        /// Raises the health changed event with the current and maximum health.
+        /// </summary>
+        /// <param name="health">The current health of the object.</param>
+        /// <param name="maxHealth">The maximum health of the object.</param>
         protected virtual void RaiseHealthChangedEvent(float health, float maxHealth)
         {
             OnHealthChanged?.Invoke(health, maxHealth);
         }
 
-
         /// <summary>
-        /// Heals the object by a certain amount.
+        /// Heals the object by a certain amount, ensuring health does not exceed maximum health.
         /// </summary>
         /// <param name="healAmount">The amount of health to restore.</param>
         public void Heal(float healAmount)
         {
-            _health += healAmount;
-            if (_health > _maxHealth)
+            if (!_isDie)
             {
-                _health = _maxHealth; // Ensure health does not exceed max health
-                OnHealthChanged?.Invoke(_health, _maxHealth);
+                _health += healAmount;
+                if (_health > _maxHealth)
+                {
+                    _health = _maxHealth; // Ensure health does not exceed max health
+                }
+
+                RaiseHealthChangedEvent(_health, _maxHealth);
             }
         }
     }

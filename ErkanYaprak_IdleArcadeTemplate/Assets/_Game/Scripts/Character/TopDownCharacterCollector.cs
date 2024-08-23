@@ -8,22 +8,17 @@ namespace _Game.Scripts.TopDownCharacter
     /// <summary>
     /// Handles the collection of items by the character in a top-down game.
     /// Detects nearby collectable items and triggers events when they are collected.
+    /// Configuration is loaded from a ScriptableObject for improved flexibility.
     /// </summary>
     public class TopDownCharacterCollector : MonoBehaviour, ICollector
     {
-        [Header("Collector Settings")]
-        [Tooltip("The radius within which collectable items can be detected.")]
-        [SerializeField] private float _collectRadius = 5f;
-
-        [Tooltip("Should the character's movement stop when collecting special items?")]
-        [SerializeField] private bool _stopMovementOnSpecialCollect = true;
-
-        [Tooltip("The duration (in seconds) for which the character's movement is paused.")]
-        [SerializeField, Range(0.1f, 5f)] private float _stopDuration = 2f;
+        [Header("Configuration")]
+        [Tooltip("Reference to the character's configuration ScriptableObject.")]
+        [SerializeField] private TopDownCharacterConfigSO _characterConfig;
 
         [Header("Events")]
         [Tooltip("Action triggered when an item is collected.")]
-        [SerializeField] private UnityAction<ICollectable> _onCollect;
+        [SerializeField] private UnityEvent<ICollectable> _onCollect;
 
         private Collider[] _collidersInRange;
 
@@ -36,6 +31,7 @@ namespace _Game.Scripts.TopDownCharacter
 
         private void Awake()
         {
+            // Ensure dependencies are assigned
             _animator = GetComponentInChildren<TopDownCharacterAnimator>();
             _characterController = GetComponent<TopDownCharacterController>();
 
@@ -55,7 +51,7 @@ namespace _Game.Scripts.TopDownCharacter
         private void DetectAndCollectItems()
         {
             // Use Physics.OverlapSphere to find colliders within the collect radius
-            int colliderCount = Physics.OverlapSphereNonAlloc(transform.position, _collectRadius, _collidersInRange);
+            int colliderCount = Physics.OverlapSphereNonAlloc(transform.position, _characterConfig.CollectRadius, _collidersInRange);
 
             for (int i = 0; i < colliderCount; i++)
             {
@@ -81,10 +77,10 @@ namespace _Game.Scripts.TopDownCharacter
             {
                 _animator.PlayWinAnimation(); // Trigger the win animation for special items
 
-                // Pause movement if enabled in settings
-                if (_stopMovementOnSpecialCollect)
+                // Pause movement if enabled in the character configuration
+                if (_characterConfig.StopMovementOnSpecialCollect)
                 {
-                    _characterController.PauseMovement(_stopDuration); // Pause movement for the specified duration
+                    _characterController.PauseMovement(_characterConfig.StopDurationOnSpecialCollect);
                 }
             }
         }
@@ -95,7 +91,7 @@ namespace _Game.Scripts.TopDownCharacter
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, _collectRadius);
+            Gizmos.DrawWireSphere(transform.position, _characterConfig.CollectRadius);
         }
     }
 }

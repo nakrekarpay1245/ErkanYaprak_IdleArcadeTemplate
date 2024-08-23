@@ -1,79 +1,93 @@
 using UnityEngine;
+using _Game.Scripts.TopDownCharacter;
 
-namespace _Game.Scripts.TopDownCharacter
+/// <summary>
+/// Controls the character's animation states and parameters, 
+/// fetching necessary data from the TopDownCharacterConfigSO.
+/// </summary>
+public class TopDownCharacterAnimator : MonoBehaviour
 {
-    public class TopDownCharacterAnimator : MonoBehaviour
+    [Header("TopDownCharacterAnimator Parameters")]
+    [Tooltip("Reference to the Animator component.")]
+    [SerializeField] private Animator _animator;
+
+    [Tooltip("Reference to the character controller.")]
+    [SerializeField] private TopDownCharacterController _controller;
+
+    [Tooltip("Reference to the character configuration ScriptableObject.")]
+    [SerializeField] private TopDownCharacterConfigSO _config;
+
+    // Animator Parameter Hashcodes
+    private int _speedHashCode;
+    private int _isHurtHashCode;
+    private int _isDeadHashCode;
+    private int _isAttackHashCode;
+    private int _isWinHashCode;
+
+    /// <summary>
+    /// Initializes the animator and controller references, 
+    /// and caches animator parameter hash codes.
+    /// </summary>
+    private void Awake()
     {
-        [Header("TopDownCharacterAnimator Parameters")]
-        /// <summary>
-        /// Reference to the Animator component.
-        /// </summary>
-        [Header("References")]
-        [Tooltip("")]
-        [SerializeField]
-        private Animator _animator;
-        [Tooltip("")]
-        [SerializeField]
-        private TopDownCharacterController _controller;
-        [Header("Paramaters")]
-        [SerializeField]
-        private string _speedAnimatorParameterKey = "Speed";
-        [SerializeField]
-        private string _isHurtAnimatorParameterKey = "IsHurt";
-        [SerializeField]
-        private string _isDeadAnimatorParameterKey = "IsDead";
-        [SerializeField]
-        private string _isAttackAnimatorParameterKey = "IsAttack";
-        [SerializeField]
-        private string _isWinAnimatorParameterKey = "IsWin";
+        // Fetching animator parameter keys from the configuration
+        _speedHashCode = Animator.StringToHash(_config.SpeedAnimatorParameterKey);
+        _isHurtHashCode = Animator.StringToHash(_config.IsHurtAnimatorParameterKey);
+        _isDeadHashCode = Animator.StringToHash(_config.IsDeadAnimatorParameterKey);
+        _isAttackHashCode = Animator.StringToHash(_config.IsAttackAnimatorParameterKey);
+        _isWinHashCode = Animator.StringToHash(_config.IsWinAnimatorParameterKey);
 
-        //Animator Parameter Hashcodes
-        private int _speedHashCode;
-        private int _isHurtHashCode;
-        private int _isDeadHashCode;
-        private int _isAttackHashCode;
-        private int _isWinHashCode;
+        // Component references
+        _animator = GetComponent<Animator>();
+        _controller = GetComponentInParent<TopDownCharacterController>();
+    }
 
-        private void Awake()
-        {
-            _speedHashCode = Animator.StringToHash(_speedAnimatorParameterKey);
-            _isHurtHashCode = Animator.StringToHash(_isHurtAnimatorParameterKey);
-            _isDeadHashCode = Animator.StringToHash(_isDeadAnimatorParameterKey);
-            _isAttackHashCode = Animator.StringToHash(_isAttackAnimatorParameterKey);
-            _isWinHashCode = Animator.StringToHash(_isWinAnimatorParameterKey);
+    /// <summary>
+    /// Updates the character's animator parameters each frame, 
+    /// like the speed based on the controller's movement.
+    /// </summary>
+    private void Update()
+    {
+        SetAnimatorSpeed();
+    }
 
-            _animator = GetComponent<Animator>();
-            _controller = GetComponentInParent<TopDownCharacterController>();
-        }
+    /// <summary>
+    /// Sets the speed parameter in the animator to match the controller's speed.
+    /// </summary>
+    private void SetAnimatorSpeed()
+    {
+        _animator.SetFloat(_speedHashCode, _controller.Speed);
+    }
 
-        private void Update()
-        {
-            SetAnimatorSpeed();
-        }
+    /// <summary>
+    /// Triggers the hurt animation based on the configured hash code.
+    /// </summary>
+    public void PlayHurtAnimation()
+    {
+        _animator.SetTrigger(_isHurtHashCode);
+    }
 
-        private void SetAnimatorSpeed()
-        {
-            _animator.SetFloat(_speedHashCode, _controller.Speed);
-        }
+    /// <summary>
+    /// Triggers the death animation based on the configured hash code.
+    /// </summary>
+    public void PlayDeadAnimation()
+    {
+        _animator.SetTrigger(_isDeadHashCode);
+    }
 
-        public void PlayHurtAnimation()
-        {
-            _animator.SetTrigger(_isHurtHashCode);
-        }
+    /// <summary>
+    /// Triggers the attack animation based on the configured hash code.
+    /// </summary>
+    public void PlayAttackAnimation()
+    {
+        _animator.SetTrigger(_isAttackHashCode);
+    }
 
-        public void PlayDeadAnimation()
-        {
-            _animator.SetTrigger(_isDeadHashCode);
-        }
-
-        public void PlayAttackAnimation()
-        {
-            _animator.SetTrigger(_isAttackHashCode);
-        }
-
-        public void PlayWinAnimation()
-        {
-            _animator.SetTrigger(_isWinHashCode);
-        }
+    /// <summary>
+    /// Triggers the win animation based on the configured hash code.
+    /// </summary>
+    public void PlayWinAnimation()
+    {
+        _animator.SetTrigger(_isWinHashCode);
     }
 }

@@ -6,15 +6,13 @@ namespace _Game.Scripts.TopDownCharacter
 {
     /// <summary>
     /// Handles damage logic for the TopDownCharacter, including taking damage and death sequences.
+    /// This class uses values from TopDownCharacterConfigSO to maintain consistency across configurations.
     /// </summary>
     public class TopDownCharacterDamageHandler : AbstractDamageableBase
     {
-        [Header("Damage Settings")]
-        [Tooltip("Duration of pause in movement after taking damage.")]
-        [SerializeField, Range(0.1f, 5f)] private float _stopDuration = 2f;
-
-        [SerializeField, Tooltip("How long to wait before character respawns or game ends.")]
-        private float _deathWaitTime = 2f;
+        [Header("Character Configuration")]
+        [Tooltip("ScriptableObject storing all character configuration parameters.")]
+        [SerializeField] private TopDownCharacterConfigSO _characterConfig;
 
         private TopDownCharacterAnimator _characterAnimator;
         private TopDownCharacterController _characterController;
@@ -23,25 +21,35 @@ namespace _Game.Scripts.TopDownCharacter
         {
             _characterAnimator = GetComponentInChildren<TopDownCharacterAnimator>();
             _characterController = GetComponent<TopDownCharacterController>();
+
+            // Validate that the ScriptableObject is assigned
+            if (_characterConfig == null)
+            {
+                Debug.LogError("TopDownCharacterConfigSO is not assigned in TopDownCharacterDamageHandler.");
+            }
         }
 
         /// <summary>
         /// Apply damage to the character and check for death.
+        /// Uses configuration values for stopping movement and triggering animations.
         /// </summary>
         /// <param name="amount">The amount of damage to apply.</param>
         public override void TakeDamage(float amount)
         {
             base.TakeDamage(amount);
+
             if (!_isDie)
             {
+                // Play the hurt animation when damage is taken
                 _characterAnimator.PlayHurtAnimation();
             }
-            // Pause movement briefly upon taking damage
-            _characterController.PauseMovement(_stopDuration);
+
+            // Pause movement for a configured duration after taking damage
+            _characterController.PauseMovement(_characterConfig.StopDurationOnDamage);
         }
 
         /// <summary>
-        /// Triggers the character's death sequence.
+        /// Triggers the character's death sequence using configuration for animations and wait times.
         /// </summary>
         public override void Die()
         {
@@ -50,24 +58,23 @@ namespace _Game.Scripts.TopDownCharacter
         }
 
         /// <summary>
-        /// The death sequence, which disables the character and waits before respawning or ending the game.
+        /// The death sequence disables movement, plays the death animation,
+        /// and waits before disabling the character, based on configuration settings.
         /// </summary>
         private IEnumerator DeathSequence()
         {
-            // Trigger death animation
+            // Play the death animation
             _characterAnimator.PlayDeadAnimation();
 
-            // Disable movement or any other interaction
+            // Disable the character controller to prevent any movement or interaction
             _characterController.enabled = false;
 
-            // Wait for a defined period
-            yield return new WaitForSeconds(_deathWaitTime);
+            // Wait for a configured duration before continuing the death process
+            yield return new WaitForSeconds(_characterConfig.DeathWaitTime);
 
-            // Optionally: Reset character or trigger game over logic
-            // Respawn or game end logic can go here
-
-            // Reactivate or handle accordingly
-            gameObject.SetActive(false);  // Example: Disable the character after death
+            // Optionally: Respawn character or trigger game over logic here
+            // For now, the character is disabled after the wait period
+            gameObject.SetActive(false);
         }
     }
 }

@@ -15,5 +15,11 @@ namespace _Game.Scripts._Interfaces
         /// Triggers the object's death sequence.
         /// </summary>
         void Die();
+
+        /// <summary>
+        /// Checks if the object is still alive.
+        /// </summary>
+        /// <returns>True if the object is alive; otherwise, false.</returns>
+        bool IsAlive();
     }
 }

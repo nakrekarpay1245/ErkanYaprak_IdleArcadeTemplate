@@ -5,13 +5,6 @@ namespace _Game.Scripts._Abstracts
 {
     public abstract class AbstractDamagerBase : MonoBehaviour, IDamager
     {
-        [Header("Damager Settings")]
-        [Tooltip("Damage dealt by this damager.")]
-        [SerializeField] protected float _damageAmount;
-
-        [Tooltip("Range of the attack.")]
-        [SerializeField] protected float _attackRange;
-
         /// <summary>
         /// Deals damage to a target that implements IDamageable.
         /// </summary>
@@ -24,14 +17,5 @@ namespace _Game.Scripts._Abstracts
         /// This method will handle the attack process for derived classes.
         /// </summary>
         public abstract void ExecuteAttack();
-
-        /// <summary>
-        /// Draws gizmos in the editor to visualize the attack range.
-        /// </summary>
-        protected virtual void OnDrawGizmosSelected()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, _attackRange);
-        }
     }
 }

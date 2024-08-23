@@ -9,45 +9,30 @@ namespace _Game.Scripts.TopDownCharacter
 {
     /// <summary>
     /// Manages the attack functionality of the character, including detection and attack mechanisms with specified delays and durations.
+    /// The configuration is pulled from a ScriptableObject to follow SOLID principles and improve flexibility and performance.
     /// </summary>
     public class TopDownCharacterAttackHandler : AbstractDamagerBase
     {
-        [Header("Detection Settings")]
-        [Tooltip("Radius within which to detect IDamageable targets.")]
-        [SerializeField] private float _detectionRadius = 5f;
+        [Header("References")]
+        [Tooltip("ScriptableObject that holds all character configuration data.")]
+        [SerializeField] private TopDownCharacterConfigSO _characterConfig;
 
-        [Header("Attack Settings")]
-        [Tooltip("Delay before attack is performed after detection.")]
-        [SerializeField] private float _attackDelay = 0.5f;
+        [Tooltip("Reference to the character's controller script.")]
+        [SerializeField] private TopDownCharacterController _characterController;
 
-        [Tooltip("Duration for the attack to be active.")]
-        [SerializeField] private float _attackDuration = 0.2f;
+        [Tooltip("Reference to the character's animator script.")]
+        [SerializeField] private TopDownCharacterAnimator _characterAnimator;
 
-        [Tooltip("Offset distance in front of the character where the attack is applied.")]
-        [SerializeField] private float _attackOffset = 1f;
-
-        [Tooltip("Layer mask to specify which layers are considered for attack.")]
-        [SerializeField] private LayerMask _damageableLayerMask;
-
-        [Tooltip("Interval between consecutive attacks.")]
-        [SerializeField] private float _attackInterval = 1f;
-
-        [SerializeField] private float _minimumSpeedForAttack = 0.25f;
-
+        [Tooltip("Reference to the character's equipped weapon.")]
         [SerializeField] private Weapon _weapon;
 
-        [Header("Rotation Settings")]
-        [Tooltip("Speed at which the character rotates to face the target.")]
-        [SerializeField] private float _rotationSpeed = 5f;
-
-        private TopDownCharacterController _characterController;
-        private TopDownCharacterAnimator _characterAnimator;
         private float _nextAttackTime = 0f;
         private bool _isAttacking = false;
         private IDamageable _currentTarget;
 
         private void Awake()
         {
+            // Ensure dependencies are assigned
             _characterController = GetComponent<TopDownCharacterController>();
             _characterAnimator = GetComponentInChildren<TopDownCharacterAnimator>();
             _weapon = GetComponentInChildren<Weapon>();
@@ -55,14 +40,15 @@ namespace _Game.Scripts.TopDownCharacter
 
         private void Update()
         {
-            if (_characterController.Speed < _minimumSpeedForAttack)
+            // Perform detection and attack only when the character's speed is below the minimum attack speed threshold
+            if (_characterController.Speed < _characterConfig.MinimumMovementSpeedForAttack)
             {
                 if (Time.time >= _nextAttackTime)
                 {
                     PerformDetection();
                     if (_isAttacking)
                     {
-                        _nextAttackTime = Time.time + _attackInterval;
+                        _nextAttackTime = Time.time + _characterConfig.AttackInterval;
                         StartCoroutine(PerformAttackWithDelay());
                     }
                 }
@@ -87,7 +73,7 @@ namespace _Game.Scripts.TopDownCharacter
         private void PerformDetection()
         {
             // Find all colliders within the detection radius
-            Collider[] hitColliders = Physics.OverlapSphere(transform.position, _detectionRadius);
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, _characterConfig.DetectionRadius);
 
             // Filter out IDamageable targets and include only those on the Damageable layer
             var damageableTargets = hitColliders
@@ -129,7 +115,7 @@ namespace _Game.Scripts.TopDownCharacter
             Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
 
             // Smoothly rotate towards the target
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * _rotationSpeed);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * _characterConfig.RotationSpeedForFaceToNearestTarget);
         }
 
         /// <summary>
@@ -141,13 +127,13 @@ namespace _Game.Scripts.TopDownCharacter
             _weapon.PlayTrailEffect();
 
             // Wait for the attack delay
-            yield return new WaitForSeconds(_attackDelay);
+            yield return new WaitForSeconds(_characterConfig.AttackDelay);
 
             // Start the attack
             ExecuteAttack();
 
             // Wait for the attack duration to end
-            yield return new WaitForSeconds(_attackDuration);
+            yield return new WaitForSeconds(_characterConfig.AttackDuration);
 
             _weapon.StopTrailEffect();
         }
@@ -158,18 +144,17 @@ namespace _Game.Scripts.TopDownCharacter
         public override void ExecuteAttack()
         {
             // Calculate the attack position
-            Vector3 attackPosition = transform.position + transform.forward * _attackOffset;
+            Vector3 attackPosition = transform.position + transform.forward * _characterConfig.AttackOffset;
 
             // Find all colliders within the attack radius
-            Collider[] hitColliders = Physics.OverlapSphere(attackPosition, _attackRange, _damageableLayerMask);
+            Collider[] hitColliders = Physics.OverlapSphere(attackPosition, _characterConfig.AttackRange, _characterConfig.DamageableLayerMask);
 
             foreach (var hitCollider in hitColliders)
             {
                 if (hitCollider.TryGetComponent(out IDamageable damageable) && damageable.IsAlive())
                 {
-                    Debug.Log(hitCollider.name);
                     // Apply damage to each IDamageable component found
-                    DealDamage(damageable, _damageAmount);
+                    DealDamage(damageable, _characterConfig.DamageAmount);
 
                     _weapon.StopTrailEffect();
                 }
@@ -193,20 +178,20 @@ namespace _Game.Scripts.TopDownCharacter
         /// <returns>True if the collider is on the Damageable layer; otherwise, false.</returns>
         private bool IsOnDamageableLayer(Collider collider)
         {
-            return (_damageableLayerMask & (1 << collider.gameObject.layer)) != 0;
+            return (_characterConfig.DamageableLayerMask & (1 << collider.gameObject.layer)) != 0;
         }
 
         /// <summary>
         /// Draws gizmos in the editor to visualize the detection and attack radii.
         /// </summary>
-        private void OnDrawGizmos()
+        private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, _detectionRadius);
+            Gizmos.DrawWireSphere(transform.position, _characterConfig.DetectionRadius);
 
             Gizmos.color = Color.red;
-            Vector3 attackPosition = transform.position + transform.forward * _attackOffset;
-            Gizmos.DrawWireSphere(attackPosition, _attackRange);
+            Vector3 attackPosition = transform.position + transform.forward * _characterConfig.AttackOffset;
+            Gizmos.DrawWireSphere(attackPosition, _characterConfig.AttackRange);
         }
     }
 }
