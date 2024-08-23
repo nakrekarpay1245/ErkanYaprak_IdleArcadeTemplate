@@ -20,17 +20,9 @@ namespace _Game.Scripts.Interactable
         [SerializeField, Range(0.1f, 5f)]
         private float _lidAnimationDuration = 1f;
 
-        [Tooltip("The distance the lid moves along the Z-axis.")]
-        [SerializeField]
-        private float _lidMoveDistanceZ = 1f;
-
-        [Tooltip("The distance the lid moves along the Y-axis.")]
-        [SerializeField]
-        private float _lidMoveDistanceY = 0.5f;
-
         [Tooltip("The angle the lid rotates around the X-axis.")]
-        [SerializeField, Range(0f, 90f)]
-        private float _lidRotationAngleX = 75f;
+        [SerializeField, Range(-180f, 180f)]
+        private float _lidRotationAngleX = -180f;
 
         [Header("Progress Bar Settings")]
         [Tooltip("The UI Image component representing the fill amount of the progress bar.")]
@@ -40,7 +32,6 @@ namespace _Game.Scripts.Interactable
         [SerializeField]
         private Image _progressBar;
 
-        private Vector3 _initialLidPosition;
         private Quaternion _initialLidRotation;
         private Coroutine _interactionCoroutine;
 
@@ -52,8 +43,7 @@ namespace _Game.Scripts.Interactable
                 return;
             }
 
-            // Save the initial position and rotation of the lid
-            _initialLidPosition = _lidTransform.localPosition;
+            // Save the initial rotation of the lid
             _initialLidRotation = _lidTransform.localRotation;
 
             _progressBar.gameObject.SetActive(false);
@@ -144,13 +134,11 @@ namespace _Game.Scripts.Interactable
         private IEnumerator AnimateLidOpen()
         {
             float elapsedTime = 0f;
-            Vector3 targetPosition = _initialLidPosition + new Vector3(0f, _lidMoveDistanceY, _lidMoveDistanceZ);
             Quaternion targetRotation = Quaternion.Euler(_lidRotationAngleX, 0f, 0f);
 
             while (elapsedTime < _lidAnimationDuration)
             {
                 float t = elapsedTime / _lidAnimationDuration;
-                _lidTransform.localPosition = Vector3.Lerp(_initialLidPosition, targetPosition, t);
                 _lidTransform.localRotation = Quaternion.Lerp(_initialLidRotation, targetRotation, t);
 
                 elapsedTime += Time.deltaTime;
@@ -158,7 +146,6 @@ namespace _Game.Scripts.Interactable
             }
 
             // Ensure final position and rotation of the lid
-            _lidTransform.localPosition = targetPosition;
             _lidTransform.localRotation = targetRotation;
         }
 
