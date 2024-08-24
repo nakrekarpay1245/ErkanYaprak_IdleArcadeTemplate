@@ -6,7 +6,7 @@
 ### How to Use?
 - **YouTube Video:** [Click Here to Play the How To Use Video]([https://youtu.be/nDBlYK3O1Fs?list=RDnDBlYK3O1Fs](https://www.youtube.com/@erkanyaprak2390))
 
-- **Live Demo:** [Click Here to Play the WebGL Demo](https://erkanyaprak.itch.io)
+- **Live Demo:** [Click Here to Play the WebGL Demo]([https://erkanyaprak.itch.io](https://erkanyaprak.itch.io/idlearcade))
 - **Download Options:** Clone directly from the repository, or use as a UnityPackage to include in your project.
 
 ## 2. Key Features
