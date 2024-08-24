@@ -17,6 +17,8 @@ namespace _Game.Scripts.TopDownCharacter
 
         private IInteractable _currentInteractable;
 
+        public TopDownCharacterConfigSO CharacterConfig { get => _characterConfig; set => _characterConfig = value; }
+
         private void Update()
         {
             HandleInteraction();

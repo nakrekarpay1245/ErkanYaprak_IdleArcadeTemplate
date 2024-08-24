@@ -17,7 +17,7 @@ namespace _Game.Scripts.TopDownCharacter
         [SerializeField] private PlayerInputSO _playerInput;
 
         [Tooltip("ScriptableObject for character configuration.")]
-        [SerializeField] private TopDownCharacterConfigSO _config;
+        [SerializeField] private TopDownCharacterConfigSO _characterConfig;
 
         private CharacterController _characterController;
         private Vector3 _currentVelocity;
@@ -27,6 +27,9 @@ namespace _Game.Scripts.TopDownCharacter
         private bool _isCoroutineRunning = false;
 
         [HideInInspector] public float Speed;
+
+        public TopDownCharacterConfigSO CharacterConfig { get => _characterConfig; set => _characterConfig = value; }
+        public PlayerInputSO PlayerInput { get => _playerInput; set => _playerInput = value; }
 
         private void Awake()
         {
@@ -62,12 +65,12 @@ namespace _Game.Scripts.TopDownCharacter
             if (_isMovementPaused) return;
 
             Vector3 direction = new Vector3(input.x, 0f, input.y).normalized;
-            Vector3 targetVelocity = direction * _config.MovementSpeed;
+            Vector3 targetVelocity = direction * _characterConfig.MovementSpeed;
 
             _currentVelocity = Vector3.Lerp(_currentVelocity, targetVelocity,
-                _config.Acceleration * Time.deltaTime);
+                _characterConfig.Acceleration * Time.deltaTime);
 
-            Speed = _currentVelocity.magnitude / _config.MovementSpeed;
+            Speed = _currentVelocity.magnitude / _characterConfig.MovementSpeed;
             _characterController.Move(_currentVelocity * Time.deltaTime);
         }
 
@@ -82,7 +85,7 @@ namespace _Game.Scripts.TopDownCharacter
                 _verticalVelocity.y = 0f;
             }
 
-            _verticalVelocity.y += _config.Gravity * Time.deltaTime;
+            _verticalVelocity.y += _characterConfig.Gravity * Time.deltaTime;
             _characterController.Move(_verticalVelocity * Time.deltaTime);
         }
 
@@ -93,11 +96,11 @@ namespace _Game.Scripts.TopDownCharacter
         private void UpdateCharacterRotation()
         {
             if (_currentVelocity.sqrMagnitude >=
-                _config.RotationSpeedThreshold * _config.RotationSpeedThreshold)
+                _characterConfig.RotationSpeedThreshold * _characterConfig.RotationSpeedThreshold)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(_currentVelocity);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation,
-                    targetRotation, _config.RotationSpeed * Time.deltaTime);
+                    targetRotation, _characterConfig.RotationSpeed * Time.deltaTime);
             }
         }
 

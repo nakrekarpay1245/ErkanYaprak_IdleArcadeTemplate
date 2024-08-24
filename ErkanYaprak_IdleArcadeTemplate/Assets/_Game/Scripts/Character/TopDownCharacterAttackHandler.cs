@@ -30,6 +30,8 @@ namespace _Game.Scripts.TopDownCharacter
         private bool _isAttacking = false;
         private IDamageable _currentTarget;
 
+        public TopDownCharacterConfigSO CharacterConfig { get => _characterConfig; set => _characterConfig = value; }
+
         private void Awake()
         {
             // Ensure dependencies are assigned

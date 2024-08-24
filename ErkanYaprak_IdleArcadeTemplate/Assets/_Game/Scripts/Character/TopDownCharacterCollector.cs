@@ -29,6 +29,8 @@ namespace _Game.Scripts.TopDownCharacter
         [Tooltip("Reference to the TopDownCharacterController for controlling movement.")]
         [SerializeField] private TopDownCharacterController _characterController;
 
+        public TopDownCharacterConfigSO CharacterConfig { get => _characterConfig; set => _characterConfig = value; }
+
         private void Awake()
         {
             // Ensure dependencies are assigned

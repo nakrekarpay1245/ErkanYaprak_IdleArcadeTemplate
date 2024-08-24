@@ -17,6 +17,8 @@ namespace _Game.Scripts.TopDownCharacter
         private TopDownCharacterAnimator _characterAnimator;
         private TopDownCharacterController _characterController;
 
+        public TopDownCharacterConfigSO CharacterConfig { get => _characterConfig; set => _characterConfig = value; }
+
         private void Awake()
         {
             _characterAnimator = GetComponentInChildren<TopDownCharacterAnimator>();
