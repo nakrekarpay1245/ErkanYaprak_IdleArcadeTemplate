@@ -39,6 +39,27 @@ namespace _Game.Scripts.TopDownCharacter
 
             // Initialize the collider array based on expected size
             _collidersInRange = new Collider[10]; // Adjust size based on expected number of items
+
+            // Validate that the ScriptableObject is assigned
+            if (_characterConfig == null)
+            {
+                Debug.LogWarning("TopDownCharacterConfigSO is not assigned in" +
+                    " TopDownCharacterCollector.");
+            }
+
+            // Validate that the TopDownCharacterAnimator is assigned
+            if (_characterAnimator == null)
+            {
+                Debug.LogWarning("TopDownCharacterAnimator is not assigned in" +
+                    " TopDownCharacterCollector.");
+            }
+
+            // Validate that the TopDownCharacterController is assigned
+            if (_characterController == null)
+            {
+                Debug.LogWarning("TopDownCharacterController is not assigned in" +
+                    " TopDownCharacterCollector.");
+            }
         }
 
         private void Update()

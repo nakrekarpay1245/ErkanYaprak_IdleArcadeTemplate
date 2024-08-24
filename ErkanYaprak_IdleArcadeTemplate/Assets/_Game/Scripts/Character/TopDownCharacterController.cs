@@ -34,6 +34,19 @@ namespace _Game.Scripts.TopDownCharacter
         private void Awake()
         {
             _characterController = GetComponent<CharacterController>();
+
+            // Validate that the ScriptableObjects are assigned
+            if (_characterConfig == null)
+            {
+                Debug.LogWarning("TopDownCharacterConfigSO is not assigned in" +
+                    " TopDownCharacterController.");
+            }
+
+            if (_playerInput == null)
+            {
+                Debug.LogWarning("PlayerInputSO is not assigned in" +
+                    " TopDownCharacterController.");
+            }
         }
 
         private void OnEnable()

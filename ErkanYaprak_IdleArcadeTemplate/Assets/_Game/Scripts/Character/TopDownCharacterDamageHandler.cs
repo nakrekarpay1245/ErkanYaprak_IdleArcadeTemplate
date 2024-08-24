@@ -29,7 +29,22 @@ namespace _Game.Scripts.TopDownCharacter
             // Validate that the ScriptableObject is assigned
             if (_characterConfig == null)
             {
-                Debug.LogError("TopDownCharacterConfigSO is not assigned in TopDownCharacterDamageHandler.");
+                Debug.LogWarning("TopDownCharacterConfigSO is not assigned in " +
+                    "TopDownCharacterDamageHandler.");
+            }
+
+            // Validate that the TopDownCharacterController is assigned
+            if (_characterController == null)
+            {
+                Debug.LogWarning("TopDownCharacterController is not assigned in" +
+                    " TopDownCharacterDamageHandler.");
+            }
+
+            // Validate that the TopDownCharacterAnimator is assigned
+            if (_characterAnimator == null)
+            {
+                Debug.LogWarning("TopDownCharacterAnimator is not assigned in" +
+                    " TopDownCharacterDamageHandler.");
             }
         }
 

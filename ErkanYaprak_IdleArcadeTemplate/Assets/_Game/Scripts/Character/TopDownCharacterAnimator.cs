@@ -43,6 +43,26 @@ public class TopDownCharacterAnimator : MonoBehaviour
         // Component references
         _animator = GetComponent<Animator>();
         _characterController = GetComponentInParent<TopDownCharacterController>();
+
+        // Validate that the ScriptableObject is assigned
+        if (_characterConfig == null)
+        {
+            Debug.LogWarning("TopDownCharacterConfigSO is not assigned in" +
+                " TopDownCharacterAnimator.");
+        }
+
+        // Validate that the Animator is assigned
+        if (_animator == null)
+        {
+            Debug.LogWarning("Animator is not assigned in TopDownCharacterAnimator.");
+        }
+
+        // Validate that the TopDownCharacterController is assigned
+        if (_characterController == null)
+        {
+            Debug.LogWarning("TopDownCharacterController is not assigned in" +
+                " TopDownCharacterAnimator.");
+        }
     }
 
     /// <summary>

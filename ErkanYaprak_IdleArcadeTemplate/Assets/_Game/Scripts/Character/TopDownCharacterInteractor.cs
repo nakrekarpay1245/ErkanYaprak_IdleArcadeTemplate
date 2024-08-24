@@ -19,6 +19,16 @@ namespace _Game.Scripts.TopDownCharacter
 
         public TopDownCharacterConfigSO CharacterConfig { get => _characterConfig; set => _characterConfig = value; }
 
+        private void Awake()
+        {
+            // Validate that the ScriptableObject is assigned
+            if (_characterConfig == null)
+            {
+                Debug.LogWarning("TopDownCharacterConfigSO is not assigned in" +
+                    " TopDownCharacterInteractor.");
+            }
+        }
+
         private void Update()
         {
             HandleInteraction();

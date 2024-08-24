@@ -38,6 +38,34 @@ namespace _Game.Scripts.TopDownCharacter
             _characterController = GetComponent<TopDownCharacterController>();
             _characterAnimator = GetComponentInChildren<TopDownCharacterAnimator>();
             _weapon = GetComponentInChildren<Weapon>();
+
+            // Validate that the ScriptableObject is assigned
+            if (_characterConfig == null)
+            {
+                Debug.LogWarning("TopDownCharacterConfigSO is not assigned in" +
+                    " TopDownCharacterAttackHandler.");
+            }
+
+            // Validate that the TopDownCharacterController is assigned
+            if (_characterController == null)
+            {
+                Debug.LogWarning("TopDownCharacterController is not assigned in" +
+                    " TopDownCharacterAttackHandler.");
+            }
+
+            // Validate that the TopDownCharacterAnimator is assigned
+            if (_characterAnimator == null)
+            {
+                Debug.LogWarning("TopDownCharacterAnimator is not assigned in" +
+                    " TopDownCharacterAttackHandler.");
+            }
+
+            // Validate that the Weapon is assigned
+            if (_weapon == null)
+            {
+                Debug.LogWarning("Weapon is not assigned in" +
+                    " TopDownCharacterAttackHandler.");
+            }
         }
 
         private void Update()
@@ -66,7 +94,10 @@ namespace _Game.Scripts.TopDownCharacter
                 else
                 {
                     StopAllCoroutines();
-                    _weapon.StopTrailEffect();
+                    if (_weapon != null)
+                    {
+                        _weapon.StopTrailEffect();
+                    }
                     _currentTarget = null;
                 }
             }
@@ -129,8 +160,10 @@ namespace _Game.Scripts.TopDownCharacter
         private IEnumerator PerformAttackWithDelay()
         {
             _characterAnimator.PlayAttackAnimation();
-            _weapon.PlayTrailEffect();
-
+            if (_weapon != null)
+            {
+                _weapon.PlayTrailEffect();
+            }
             // Wait for the attack delay
             yield return new WaitForSeconds(_characterConfig.AttackDelay);
 
@@ -139,8 +172,10 @@ namespace _Game.Scripts.TopDownCharacter
 
             // Wait for the attack duration to end
             yield return new WaitForSeconds(_characterConfig.AttackDuration);
-
-            _weapon.StopTrailEffect();
+            if (_weapon != null)
+            {
+                _weapon.StopTrailEffect();
+            }
         }
 
         /// <summary>
@@ -161,7 +196,10 @@ namespace _Game.Scripts.TopDownCharacter
                     // Apply damage to each IDamageable component found
                     DealDamage(damageable, _characterConfig.DamageAmount);
 
-                    _weapon.StopTrailEffect();
+                    if (_weapon != null)
+                    {
+                        _weapon.StopTrailEffect();
+                    }
                 }
             }
         }
