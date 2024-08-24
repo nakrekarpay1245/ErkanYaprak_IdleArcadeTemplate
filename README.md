@@ -8,7 +8,7 @@
 ### How to Use?
 - **YouTube Tutorial Video:** [Click Here to Play the How To Use Video](https://youtu.be/AbNMG2LzjAY)
 - **Live Demo:** [Click Here to Play the WebGL Demo](https://erkanyaprak.itch.io/idlearcade)
-- **Download Options:** Clone directly from the repository, or use as a UnityPackage to include in your project.
+- **Download Options:** Clone directly from the repository, or use as a [UnityPackage](ErkanYaprak_IdleArcadeTemplate.unitypackage) to include in your project.
 
 ## 2. Key Features
 - **TopDownCharacterController:** Handle character movement with keyboard and joystick input using Unity's built-in `CharacterController`. PlayerInputSO reduces dependency and takes all data and applies it. The values ​​in PlayerInputSO are changed by InputHandler.
