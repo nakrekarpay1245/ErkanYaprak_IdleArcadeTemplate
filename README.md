@@ -4,9 +4,9 @@
 **Idle Arcade Template** is a mobile-focused game development template that allows you to quickly prototype and create top-down arcade games. Featuring a comprehensive set of components, powerful editor tools, and an extensible architecture adhering to SOLID principles, this template offers both developers and game designers an optimized workflow for creating dynamic and engaging gameplay.
 
 ### How to Use?
-- **YouTube Video:** [Click Here to Play the How To Use Video]([https://youtu.be/nDBlYK3O1Fs?list=RDnDBlYK3O1Fs](https://www.youtube.com/@erkanyaprak2390))
+- **YouTube Video:** [Click Here to Play the How To Use Video](https://youtu.be/nDBlYK3O1Fs?list=RDnDBlYK3O1Fs](https://www.youtube.com/@erkanyaprak2390)
 
-- **Live Demo:** [Click Here to Play the WebGL Demo]([https://erkanyaprak.itch.io](https://erkanyaprak.itch.io/idlearcade))
+- **Live Demo:** [Click Here to Play the WebGL Demo](https://erkanyaprak.itch.io/idlearcade)
 - **Download Options:** Clone directly from the repository, or use as a UnityPackage to include in your project.
 
 ## 2. Key Features
