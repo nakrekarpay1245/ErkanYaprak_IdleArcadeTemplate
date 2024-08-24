@@ -118,7 +118,7 @@ public class TopDownCharacterCreator : EditorWindow
     }
 
     /// <summary>
-    /// Instantiates the model as a child of the prefab root.
+    /// Instantiates the model as a child of the prefab root and sets its position.
     /// </summary>
     /// <param name="model">The model GameObject to instantiate.</param>
     /// <param name="prefabObject">The prefab root GameObject.</param>
@@ -127,6 +127,9 @@ public class TopDownCharacterCreator : EditorWindow
     {
         GameObject modelInstance = Instantiate(model);
         modelInstance.transform.SetParent(prefabObject.transform);
+
+        // Set the position of the model instance
+        modelInstance.transform.localPosition = new Vector3(0, -1, 0);
         modelInstance.name = model.name;
         return modelInstance;
     }
@@ -153,7 +156,7 @@ public class TopDownCharacterCreator : EditorWindow
         if (characterController == null)
         {
             characterController = prefabObject.AddComponent<CharacterController>();
-            characterController.center = Vector3.up;
+            characterController.center = Vector3.zero;
             characterController.height = 2;
         }
     }
