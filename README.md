@@ -3,7 +3,7 @@
 ## 1. Project Overview
 **Idle Arcade Template** is a mobile-focused game development template that allows you to quickly prototype and create top-down arcade games. Featuring a comprehensive set of components, powerful editor tools, and an extensible architecture adhering to SOLID principles, this template offers both developers and game designers an optimized workflow for creating dynamic and engaging gameplay.
 
-<iframe width="1468" height="562" src="https://www.youtube.com/embed/0Nh8_X-yF-A" title="TopDownCharacter Presentation" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![TopDownCharacter Presentation](https://img.youtube.com/vi/0Nh8_X-yF-A/0.jpg)](https://www.youtube.com/watch?v=0Nh8_X-yF-A)
 
 ### How to Use?
 - **YouTube Tutorial Video:** [Click Here to Play the How To Use Video](https://youtu.be/AbNMG2LzjAY)
