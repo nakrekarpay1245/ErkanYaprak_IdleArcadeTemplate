@@ -110,3 +110,10 @@ You can contact us for the contributions you would like to make.
 
 ## 9. Support
 For any issues or inquiries, please submit an issue on the GitHub repo or contact me via the email provided above.
+
+## 10. Sources
+- **Character Package:** [3D Anime Game Character Male](https://assetstore.unity.com/packages/3d/characters/humanoids/3d-anime-game-character-male-267370)
+- **Icons:** [Flaticon](https://www.flaticon.com)
+- **Gold, Hazard, Chest Scroll, Target Board Models:** [Poly Pizza](https://poly.pizza)
+- **Joystick Package:** [Joystick Pack](https://assetstore.unity.com/packages/tools/input-management/joystick-pack-107631?srsltid=AfmBOooXUlFglyscBlkxgWtf9TkFdNCORQam1_TTUDjjsbE1mFgFv6sN)
+- **2D Texture Designs:** [Pixlr Editor](https://pixlr.com/tr/editor/)
