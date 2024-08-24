@@ -14,9 +14,11 @@ namespace _Game.Scripts.TopDownCharacter
         [Tooltip("ScriptableObject storing all character configuration parameters.")]
         [SerializeField] private TopDownCharacterConfigSO _characterConfig;
 
-        private TopDownCharacterAnimator _characterAnimator;
-        private TopDownCharacterController _characterController;
+        [Tooltip("Reference to the character's controller script.")]
+        [SerializeField] private TopDownCharacterController _characterController;
 
+        [Tooltip("Reference to the character's animator script.")]
+        [SerializeField] private TopDownCharacterAnimator _characterAnimator;
         public TopDownCharacterConfigSO CharacterConfig { get => _characterConfig; set => _characterConfig = value; }
 
         private void Awake()
@@ -42,12 +44,18 @@ namespace _Game.Scripts.TopDownCharacter
 
             if (!_isDie)
             {
-                // Play the hurt animation when damage is taken
-                _characterAnimator.PlayHurtAnimation();
+                if (_characterAnimator != null)
+                {
+                    // Play the hurt animation when damage is taken
+                    _characterAnimator.PlayHurtAnimation();
+                }
             }
 
-            // Pause movement for a configured duration after taking damage
-            _characterController.PauseMovement(_characterConfig.StopDurationOnDamage);
+            if (_characterController != null)
+            {
+                // Pause movement for a configured duration after taking damage
+                _characterController.PauseMovement(_characterConfig.StopDurationOnDamage);
+            }
         }
 
         /// <summary>
@@ -65,11 +73,17 @@ namespace _Game.Scripts.TopDownCharacter
         /// </summary>
         private IEnumerator DeathSequence()
         {
-            // Play the death animation
-            _characterAnimator.PlayDeadAnimation();
+            if (_characterAnimator != null)
+            {
+                // Play the death animation
+                _characterAnimator.PlayDeadAnimation();
+            }
 
-            // Disable the character controller to prevent any movement or interaction
-            _characterController.enabled = false;
+            if (_characterController != null)
+            {
+                // Disable the character controller to prevent any movement or interaction
+                _characterController.enabled = false;
+            }
 
             // Wait for a configured duration before continuing the death process
             yield return new WaitForSeconds(_characterConfig.DeathWaitTime);

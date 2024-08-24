@@ -42,30 +42,33 @@ namespace _Game.Scripts.TopDownCharacter
 
         private void Update()
         {
-            // Perform detection and attack only when the character's speed is below the minimum attack speed threshold
-            if (_characterController.Speed < _characterConfig.MinimumMovementSpeedForAttack)
+            if (_characterController != null)
             {
-                if (Time.time >= _nextAttackTime)
+                // Perform detection and attack only when the character's speed is below the minimum attack speed threshold
+                if (_characterController.Speed < _characterConfig.MinimumMovementSpeedForAttack)
                 {
-                    PerformDetection();
-                    if (_isAttacking)
+                    if (Time.time >= _nextAttackTime)
                     {
-                        _nextAttackTime = Time.time + _characterConfig.AttackInterval;
-                        StartCoroutine(PerformAttackWithDelay());
+                        PerformDetection();
+                        if (_isAttacking)
+                        {
+                            _nextAttackTime = Time.time + _characterConfig.AttackInterval;
+                            StartCoroutine(PerformAttackWithDelay());
+                        }
+                    }
+
+                    // Continuously face the current target if available
+                    if (_currentTarget != null)
+                    {
+                        FaceTarget(_currentTarget);
                     }
                 }
-
-                // Continuously face the current target if available
-                if (_currentTarget != null)
+                else
                 {
-                    FaceTarget(_currentTarget);
+                    StopAllCoroutines();
+                    _weapon.StopTrailEffect();
+                    _currentTarget = null;
                 }
-            }
-            else
-            {
-                StopAllCoroutines();
-                _weapon.StopTrailEffect();
-                _currentTarget = null;
             }
         }
 

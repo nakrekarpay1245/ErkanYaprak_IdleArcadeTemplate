@@ -78,7 +78,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerInput: {fileID: 11400000, guid: 7c96f07bd4705ef448f7c5de3e0adb53, type: 2}
-  _config: {fileID: 11400000, guid: 7bc2d5570f1414b44b9beee505ea2bb8, type: 2}
+  _characterConfig: {fileID: 11400000, guid: 7bc2d5570f1414b44b9beee505ea2bb8, type: 2}
   Speed: 0
 --- !u!114 &4316162310213479071
 MonoBehaviour:
@@ -96,7 +96,7 @@ MonoBehaviour:
   _onCollect:
     m_PersistentCalls:
       m_Calls: []
-  _animator: {fileID: 0}
+  _characterAnimator: {fileID: 0}
   _characterController: {fileID: 0}
 --- !u!114 &2630371113431945016
 MonoBehaviour:
@@ -113,6 +113,8 @@ MonoBehaviour:
   _health: 5
   _maxHealth: 5
   _characterConfig: {fileID: 11400000, guid: 7bc2d5570f1414b44b9beee505ea2bb8, type: 2}
+  _characterController: {fileID: 0}
+  _characterAnimator: {fileID: 0}
 --- !u!114 &1353562623993030306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,6 +426,12 @@ PrefabInstance:
       propertyPath: _controller
       value: 
       objectReference: {fileID: 818274647026035061}
+    - target: {fileID: 2717525616512968633, guid: f1dc3f1e237f3b343a76223c6c1ce3fe,
+        type: 3}
+      propertyPath: _characterConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 7bc2d5570f1414b44b9beee505ea2bb8,
+        type: 2}
     - target: {fileID: 4234785985342795430, guid: f1dc3f1e237f3b343a76223c6c1ce3fe,
         type: 3}
       propertyPath: m_LocalPosition.x

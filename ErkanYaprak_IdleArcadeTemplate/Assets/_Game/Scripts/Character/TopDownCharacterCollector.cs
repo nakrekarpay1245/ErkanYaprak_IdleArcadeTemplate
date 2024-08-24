@@ -24,7 +24,7 @@ namespace _Game.Scripts.TopDownCharacter
 
         [Header("References")]
         [Tooltip("Reference to the character animator for playing animations.")]
-        [SerializeField] private TopDownCharacterAnimator _animator;
+        [SerializeField] private TopDownCharacterAnimator _characterAnimator;
 
         [Tooltip("Reference to the TopDownCharacterController for controlling movement.")]
         [SerializeField] private TopDownCharacterController _characterController;
@@ -34,7 +34,7 @@ namespace _Game.Scripts.TopDownCharacter
         private void Awake()
         {
             // Ensure dependencies are assigned
-            _animator = GetComponentInChildren<TopDownCharacterAnimator>();
+            _characterAnimator = GetComponentInChildren<TopDownCharacterAnimator>();
             _characterController = GetComponent<TopDownCharacterController>();
 
             // Initialize the collider array based on expected size
@@ -77,12 +77,18 @@ namespace _Game.Scripts.TopDownCharacter
             // Check if the collectable is a SpecialCollectible
             if (collectable is SpecialCollectible)
             {
-                _animator.PlayWinAnimation(); // Trigger the win animation for special items
-
+                if (_characterAnimator != null)
+                {
+                    _characterAnimator.PlayWinAnimation(); // Trigger the win animation for special items
+                }
                 // Pause movement if enabled in the character configuration
                 if (_characterConfig.StopMovementOnSpecialCollect)
                 {
-                    _characterController.PauseMovement(_characterConfig.StopDurationOnSpecialCollect);
+
+                    if (_characterController != null)
+                    {
+                        _characterController.PauseMovement(_characterConfig.StopDurationOnSpecialCollect);
+                    }
                 }
             }
         }

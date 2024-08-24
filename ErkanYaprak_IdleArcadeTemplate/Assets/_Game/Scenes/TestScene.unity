@@ -740,11 +740,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: DamageDealerHazard
       objectReference: {fileID: 0}
-    - target: {fileID: 8170905087219870485, guid: d87f1e952d0271948bbfcdd19ba6a46a,
-        type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

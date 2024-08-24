@@ -12,7 +12,7 @@ public class TopDownCharacterAnimator : MonoBehaviour
     [SerializeField] private Animator _animator;
 
     [Tooltip("Reference to the character controller.")]
-    [SerializeField] private TopDownCharacterController _controller;
+    [SerializeField] private TopDownCharacterController _characterController;
 
     [Tooltip("Reference to the character configuration ScriptableObject.")]
     [SerializeField] private TopDownCharacterConfigSO _characterConfig;
@@ -42,7 +42,7 @@ public class TopDownCharacterAnimator : MonoBehaviour
 
         // Component references
         _animator = GetComponent<Animator>();
-        _controller = GetComponentInParent<TopDownCharacterController>();
+        _characterController = GetComponentInParent<TopDownCharacterController>();
     }
 
     /// <summary>
@@ -51,7 +51,10 @@ public class TopDownCharacterAnimator : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        SetAnimatorSpeed();
+        if (_characterController != null)
+        {
+            SetAnimatorSpeed();
+        }
     }
 
     /// <summary>
@@ -59,7 +62,7 @@ public class TopDownCharacterAnimator : MonoBehaviour
     /// </summary>
     private void SetAnimatorSpeed()
     {
-        _animator.SetFloat(_speedHashCode, _controller.Speed);
+        _animator.SetFloat(_speedHashCode, _characterController.Speed);
     }
 
     /// <summary>
