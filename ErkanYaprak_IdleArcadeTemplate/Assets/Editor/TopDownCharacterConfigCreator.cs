@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -235,10 +236,62 @@ public class TopDownCharacterConfigCreator : EditorWindow
         AssetDatabase.CreateAsset(config, path);
         AssetDatabase.SaveAssets();
 
+        // Ensure "Player" tag and layer exist
+        EnsureTagAndLayerExist("Player", "Player");
+
+        // Assign the tag and layer to the created asset
+        GameObject tempGO = new GameObject(); // Create a temporary GameObject to apply the tag and layer
+        tempGO.tag = "Player";
+        tempGO.layer = LayerMask.NameToLayer("Player");
+        EditorUtility.SetDirty(config); // Mark the asset as dirty so changes are saved
+
+        DestroyImmediate(tempGO); // Clean up the temporary GameObject
+
         // Focus on the newly created asset
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = config;
 
-        Debug.Log($"TopDownCharacterConfigSO created and saved at {path}");
+        Debug.Log($"TopDownCharacterConfigSO created and saved at {path} with tag and layer set to 'Player'.");
+    }
+
+    private void EnsureTagAndLayerExist(string tagName, string layerName)
+    {
+        // Ensure the tag exists
+        if (!UnityEditorInternal.InternalEditorUtility.tags.Contains(tagName))
+        {
+            SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+            SerializedProperty tagsProp = tagManager.FindProperty("tags");
+
+            // Insert new tag if it doesn't exist
+            for (int i = 0; i < tagsProp.arraySize; i++)
+            {
+                SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
+                if (t.stringValue == "")
+                {
+                    t.stringValue = tagName;
+                    tagManager.ApplyModifiedProperties();
+                    break;
+                }
+            }
+        }
+
+        // Ensure the layer exists
+        if (!UnityEditorInternal.InternalEditorUtility.layers.Contains(layerName))
+        {
+            SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+            SerializedProperty layersProp = tagManager.FindProperty("layers");
+
+            // Insert new layer if it doesn't exist
+            for (int i = 8; i < layersProp.arraySize; i++) // Unity layers 0-7 are reserved
+            {
+                SerializedProperty l = layersProp.GetArrayElementAtIndex(i);
+                if (l.stringValue == "")
+                {
+                    l.stringValue = layerName;
+                    tagManager.ApplyModifiedProperties();
+                    break;
+                }
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ using UnityEditor.AssetImporters;
 using _Game.Scripts.TopDownCharacter;
 using _Game.Scripts.InputHandling;
 using UnityEditor.Animations;
+using System.Linq;
 
 /// <summary>
 /// Custom editor window for setting up character prefabs with components based on a configuration.
@@ -27,6 +28,9 @@ public class TopDownCharacterCreator : EditorWindow
 
     [Tooltip("The player input configuration ScriptableObject.")]
     [SerializeField] private PlayerInputSO playerInputConfig;
+
+    private const string PlayerTag = "Player";
+    private const int PlayerLayer = 8; // Typically layer 8 is used for "Player". Adjust as needed.
 
     [MenuItem("Tools/Top Down Character Creator")]
     public static void ShowWindow()
@@ -72,6 +76,7 @@ public class TopDownCharacterCreator : EditorWindow
         GameObject prefabObject = CreatePrefabRoot(prefabName);
         GameObject modelInstance = InstantiateModel(model, prefabObject);
 
+        SetTagAndLayer(prefabObject, PlayerTag, PlayerLayer);
         ConfigurePrefab(prefabObject, modelInstance);
 
         SaveAndCleanUpPrefab(prefabObject, saveDirectory, prefabName);
@@ -233,6 +238,66 @@ public class TopDownCharacterCreator : EditorWindow
             {
                 Debug.LogError($"AnimatorController not found at path: {controllerPath}");
             }
+        }
+    }
+
+    /// <summary>
+    /// Sets the tag and layer of the GameObject. If the tag or layer does not exist, creates them.
+    /// </summary>
+    /// <param name="gameObject">The GameObject to set tag and layer for.</param>
+    /// <param name="tag">The tag to be applied.</param>
+    /// <param name="layer">The layer index to be applied.</param>
+    private void SetTagAndLayer(GameObject gameObject, string tag, int layer)
+    {
+        if (!UnityEditorInternal.InternalEditorUtility.tags.Contains(tag))
+        {
+            AddTag(tag);
+        }
+
+        if (!UnityEditorInternal.InternalEditorUtility.layers.Contains(LayerMask.LayerToName(layer)))
+        {
+            AddLayer(layer);
+        }
+
+        gameObject.tag = tag;
+        gameObject.layer = layer;
+    }
+
+    /// <summary>
+    /// Adds a new tag to the project.
+    /// </summary>
+    /// <param name="newTag">The tag name to be added.</param>
+    private void AddTag(string newTag)
+    {
+        SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+        SerializedProperty tagsProp = tagManager.FindProperty("tags");
+
+        for (int i = 0; i < tagsProp.arraySize; i++)
+        {
+            SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
+            if (t.stringValue.Equals(newTag)) return;
+        }
+
+        tagsProp.InsertArrayElementAtIndex(0);
+        SerializedProperty newTagProp = tagsProp.GetArrayElementAtIndex(0);
+        newTagProp.stringValue = newTag;
+
+        tagManager.ApplyModifiedProperties();
+    }
+
+    /// <summary>
+    /// Adds a new layer to the project.
+    /// </summary>
+    /// <param name="layerIndex">The layer index to add.</param>
+    private void AddLayer(int layerIndex)
+    {
+        SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+        SerializedProperty layersProp = tagManager.FindProperty("layers");
+
+        if (layersProp.GetArrayElementAtIndex(layerIndex).stringValue == "")
+        {
+            layersProp.GetArrayElementAtIndex(layerIndex).stringValue = "Player";
+            tagManager.ApplyModifiedProperties();
         }
     }
 

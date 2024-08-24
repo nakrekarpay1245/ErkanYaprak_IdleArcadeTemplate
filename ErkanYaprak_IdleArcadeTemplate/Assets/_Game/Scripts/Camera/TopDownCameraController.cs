@@ -27,8 +27,17 @@ namespace _Game.Scripts.TopDownCamera
                 _camera = GetComponentInChildren<Camera>();
             }
 
+            _targetCharacter = FindObjectOfType<TopDownCharacterController>();
+
             // Initialize camera settings based on the ScriptableObject configuration
             _camera.fieldOfView = _cameraConfig.DefaultFOV;
+
+            // Validate that the TopDownCharacterController is assigned
+            if (_targetCharacter == null)
+            {
+                Debug.LogWarning("TopDownCharacterController is not assigned in" +
+                    " TopDownCameraController.");
+            }
         }
 
         private void LateUpdate()
