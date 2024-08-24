@@ -37,7 +37,7 @@
 ### WebGL Demo
 You can experience the template firsthand by playing the WebGL demo. Click the link below:
 
-[Play WebGL Demo](#)
+[Play WebGL Demo](https://erkanyaprak.itch.io/idlearcade)
 
 ## 4. Usage
 
