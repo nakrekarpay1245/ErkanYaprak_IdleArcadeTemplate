@@ -99,6 +99,7 @@ namespace _Game.Scripts.TopDownCharacter
                         _weapon.StopTrailEffect();
                     }
                     _currentTarget = null;
+                    _nextAttackTime = Time.time + _characterConfig.AttackInterval;
                 }
             }
         }
